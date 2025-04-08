@@ -46,7 +46,7 @@ for(let i = 0; i < 80; i++){
 	document.write(colision[i]+", \n");
 }
 ```
- - essa gambiarra era chamada de ```hot_wiring.js``` e era de uma época que eu era burro e não sabia como resolver problemas de event listening no JS.
+ - essa gambiarra era chamada de ```hot_wiring.js``` e era de uma época que eu era burro e não sabia como resolver problemas de event listening no JS. A função era chamada na tag de script, mas nunca executada efetivamente. daî surge a urgência de fazer uma gambiarra para continuar focado com o código do magical sewer.
  
 
 versão 1.0 de hoje em dia
