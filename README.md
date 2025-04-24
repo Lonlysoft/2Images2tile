@@ -8,7 +8,7 @@ palavras chave: criador de mapas, ferramentas para desenvolvimento de jogos 2D, 
 
 _[A serem adicionadas]_
 
-Olhar problemas inuteis
+O problema que já tinha sido resolvido para todo mundo, mas não para mim
 -
 
 um dos problemas que eu percebi enquanto eu fazia o Funky Pack era que muitas das minhas tilesets que eu queria fazer iriam demorar para ficarem prontas se eu quisesse fazer digitando numero por número. Então veio a ideia de fazer um programa que criasse esses tilesets de forma mais automática a partir de algo que eu tenho mais controle. Como Imagens.
