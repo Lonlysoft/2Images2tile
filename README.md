@@ -46,7 +46,7 @@ for(let i = 0; i < 80; i++){
 	document.write(colision[i]+", \n");
 }
 ```
- - essa gambiarra era chamada de ```hot_wiring.js``` e era de uma época que eu era burro e não sabia como resolver problemas de event listening no JS. A função era chamada na tag de script, mas nunca executada efetivamente. daî surge a urgência de fazer uma gambiarra para continuar focado com o código do magical sewer.
+ - essa gambiarra era chamada de ```hot_wiring.js``` e era de uma época que eu era burro e não sabia como resolver problemas de event listening no JS. A função era chamada na tag de script, mas nunca executada efetivamente. Obviamente isso foi feito devido a urgência de fazer uma gambiarra para continuar focado com o código do magical sewer, basicamente dizendo: isso não é um projeto principal.
  
 
 versão 1.0 de hoje em dia
@@ -57,3 +57,8 @@ após eu focar no funky pack eu tava mais vacinado contra event listeners e deci
 - por conta disso era necessário um sistema robusto que não dependesse de cores constantes, já que elas mudam de acordo com o contexto.
 - essa preocupação me fez lembrar que as vezes no jogo eu utilizava numeros para tirar uma string de um array na posição do número e utilizar ela em um objeto.
 - o metodo atual se baseia em pegar duas imagens e comparar os pixels da segunda com a primeira para gerar uma matriz. É quase como se fosse uma tabela hash só que sem a tabela e o hash.
+
+Conclusão
+-
+
+É bem interessante perceber que o fato de ter só um celular e um tablet de 2016 me fez fazer um projeto que é simples e talvez até batido, mas bem útil para eu automatizar assets. mesmo que seja feito só pra mim.
