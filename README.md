@@ -6,7 +6,7 @@ palavras chave: criador de mapas, ferramentas para desenvolvimento de jogos 2D, 
 
 # Imagens do Projeto
 
-_[A serem adicionadas]_
+<img src = "screenshots/img1.jpg" alt = "imagem_principal">
 
 O problema que já tinha sido resolvido para todo mundo, mas não para mim
 -
@@ -46,20 +46,20 @@ for(let i = 0; i < 80; i++){
 	document.write(colision[i]+", \n");
 }
 ```
- - essa gambiarra era chamada de ```hot_wiring.js``` e era de uma época que eu era burro e não sabia como resolver problemas de event listening no JS. A função era chamada na tag de script, mas nunca executada efetivamente. Obviamente isso foi feito devido a urgência de fazer uma gambiarra para continuar focado com o código do magical sewer, basicamente dizendo: isso não é um projeto principal.
+ - essa gambiarra era chamada de ```hot_wiring.js``` e era de uma época que eu era burro e não sabia como resolver problemas de event listening no JS. A função era chamada na tag de script, mas nunca executada efetivamente. Obviamente isso foi feito devido a urgência de fazer qualquer coisa para continuar focado com o código do magical sewer, basicamente dizendo: isso não é um projeto principal eu não ligo é só dois for loops e pronto.
  
 
 versão 1.0 de hoje em dia
 -
 
-após eu focar no funky pack eu tava mais vacinado contra event listeners e decidi voltar para fazer o mapa de forma mais automatizada.
-- agora o mapa era dividido em múltiplos tilesets com matrizes para colisão, gráficos, objetos de cenário, npcs, gatilhos e espaço de teleporte para outros mapas.
+após eu focar no funky pack eu tava mais vacinado contra event listeners e decidi voltar para fazer o mapa de forma mais automatizada, bonita, com uma interface gráfica, mais opções de envio e até fazer scripts dos npcs
+- agora o mapa é dividido em múltiplos tilesets com matrizes para colisão, gráficos, objetos de cenário, npcs, gatilhos, itens e espaço de teleporte para outros mapas.
 - por conta disso era necessário um sistema robusto que não dependesse de cores constantes, já que elas mudam de acordo com o contexto.
 - essa preocupação me fez lembrar que as vezes no jogo eu utilizava numeros para tirar uma string de um array na posição do número e utilizar ela em um objeto.
-- o metodo atual se baseia em pegar duas imagens e comparar os pixels da segunda com a primeira para gerar uma matriz. É quase como se fosse uma tabela hash só que sem a tabela e o hash.
-- o arquivo gerado é do tipo JSON. que acredite ou não é util por conta do jogo ser realmente em javascript...
+- o metodo atual se baseia em pegar duas imagens e comparar os pixels da segunda com a primeira para gerar uma matriz. É quase como se fosse uma tabela hash só que sem as operações malucas de cálculo de colisão.
+- o arquivo gerado é do tipo JSON. que acredite ou não, é util por conta do jogo ser realmente em javascript. Caso isso exista
 
 Conclusão
 -
 
-É bem interessante perceber que o fato de ter só um celular e um tablet de 2016 me fez fazer um projeto que é simples e talvez até batido, mas bem útil para eu automatizar assets. mesmo que seja feito só pra mim.
+É bem interessante perceber que o fato de ter só um celular e um tablet de 2016 me fez fazer um projeto que é simples e talvez até batido, mas bem útil para eu automatizar assets. Mesmo que seja feito só pra mim.
