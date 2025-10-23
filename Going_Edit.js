@@ -1,7 +1,7 @@
 const canvas = document.getElementById("editor");
 const ctx = canvas.getContext("2d");
 const canvas_template = document.getElementById("paleta");
-const ctx_template = canvas.getContext("2d");
+const ctx_template = canvas_template.getContext("2d");
 
 const coresTemplate = [];
 const TheSystem = {name: "mapa", mapa: []};
@@ -20,10 +20,12 @@ function obterCorDeTemplate(temp_imagery){
 }
 const osInputs = {
 	tipoDeSetup: document.querySelector(".input__image_grid"),
-	asCoresEmOrdem: document.querySelector(".input__image_template")
+	asCoresEmOrdem: document.querySelector(".input__image_template"),
+	tileset: document.querySelector(".input__tile")
 };
 osInputs.tipoDeSetup.addEventListener("change", handleImagery);
 osInputs.asCoresEmOrdem.addEventListener("change", handlePallet);
+osInputs.tileset.addEventListener("change", handleTileSet);
 
 function idOf(array, contents){
 	if(!array.includes(contents)){
@@ -32,6 +34,31 @@ function idOf(array, contents){
 	for(let i = 0; i < array.length; i++){
 		if(contents == array[i])
 			return i;
+	}
+}
+
+function WorldToGrid(axis, tileSize){
+	return Math.floor(axis/tileSize);
+}
+
+function drawMap(){
+	const inputNumber = document.querySelector(".input__tileSize");
+	const TILE_SIZE = Number(inputNumber.value);
+	const mapCanvas = document.querySelector("#mapCanvas");
+	const mapCtx = mapCanvas.getContext("2d");
+	mapCanvas.height = TheSystem.mapa.length * TILE_SIZE;
+	mapCanvas.width = TheSystem.mapa[0].length * TILE_SIZE;
+	for(let i = 0; i < TheSystem.mapa.length; i++){
+		for(let j = 0; j < TheSystem.mapa[i].length; j++){
+			mapCtx.drawImage(tiles,
+				TheSystem.mapa[i][j]*TileSize % imagemSdw_width,
+				Number.parseInt(
+					TheSystem.mapa[i][j]/WorldToGrid(imagemSdw_width, TileSize)
+				) * TileSize,
+				TileSize, TileSize,
+				j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE
+			);
+		}
 	}
 }
 
@@ -96,13 +123,13 @@ function generalForGraphicPurposes(imagemSdw){
 				TheSystem.mapa[i][j] += imageLengthInTileSize+2;
 			
 			else if(flag[0] && flag[1] && !flag[2] && !flag[3])
-				TheSystem.mapa[i][j] -= imageLengthInTileSize*2;
+				TheSystem.mapa[i][j] += imageLengthInTileSize*2;
 				
 			else if(flag[0] && flag[2] && !flag[1] && !flag[3])
-				TheSystem.mapa[i][j] -= imageLengthInTileSize-1;
+				TheSystem.mapa[i][j] -= imageLengthInTileSize+1;
 				
 			else if(flag[0] && flag[3] && !flag[1] && !flag[2])
-				TheSystem.mapa[i][j] -= imageLengthInTileSize+1;
+				TheSystem.mapa[i][j] -= imageLengthInTileSize-1;
 				
 			else if(flag[1] && flag[2] && !flag[0] && !flag[3])
 				TheSystem.mapa[i][j] += imageLengthInTileSize-1;
@@ -124,12 +151,14 @@ function generalForGraphicPurposes(imagemSdw){
 				
 			else if(flag[3] && !flag[0] && !flag[1] && !flag[2])
 				TheSystem.mapa[i][j]++;
+			
 		}
 	}
 }
 
 let image;
 let pallet;
+let tiles;
 
 const frontImage = document.querySelector(".main_img");
 const backImage = document.querySelector(".pallet_img");
@@ -142,7 +171,11 @@ function handleImagery(e){
 function handlePallet(e){
 	const arq = e.target.files[0];
 	savePallet(arq);
-	
+}
+
+function handleTileSet(e){
+	const arq = e.target.files[0];
+	saveTiles(arq);
 }
 
 function saveImage(file){
@@ -167,8 +200,22 @@ function savePallet(file){
 	leitor.readAsDataURL(file);
 }
 
+function saveTiles(file){
+	const leitor = new FileReader();
+	leitor.onload = function(e){
+		tiles = new Image();
+		tiles.src = e.target.result;
+	}
+	leitor.readAsDataURL(file);
+}
+
 const map__type = document.querySelector(".map__type");
 const output = document.querySelector(".output");
+
+function openVisualizer(){
+	const divVisualizer = document.querySelector(".map-visualization");
+	divVisualizer.classList.toggle("none");
+}
 
 let finalString;
 function calculate_andSend(){
@@ -185,7 +232,8 @@ function calculate_andSend(){
 			general(image);
 		}
 		else {
-			generalForGraphicPurposes(image)
+			generalForGraphicPurposes(image);
+			openVisualizer();
 		}
 		send.innerHTML = "pronto!"; output.classList.remove("none");
 	}, 1000);

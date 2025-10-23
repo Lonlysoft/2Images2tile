@@ -7,155 +7,20 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital,wght@0,300..700;1,300..700&family=Kalam:wght@300;400;700&family=Play:wght@400;700&family=Poiret+One&family=Teko:wght@300..700&family=Yatra+One&display=swap" rel="stylesheet">
-		<link rel = "stylesheet" href = "reset.css">
-		<style>
-			:root{
-				--bg: #004643;
-				--h-color: #fffffe;
-				--p-color: #abd1c6;
-				--button-bg: #f9bc60;
-				--button-color: #001e1d;
-			}
-			
-			.inclusive-sans {
-				font-family: "Inclusive Sans", sans-serif;
-				font-optical-sizing: auto;
-				font-weight: 400;
-				font-style: normal;
-			}
-			.inclusive-sans-bolder {
-				font-family: "Inclusive Sans", sans-serif;
-				font-optical-sizing: auto;
-				font-weight: 800;
-				font-style: normal;
-			}
-			body{
-				width: 100vw;
-				height: 100vh;
-				margin: 0;
-				padding: 0;
-				display: flex;
-				justify-content: center;
-				flex-direction: column;
-				align-items: center;
-				gap: 1em;
-				background: var(--bg);
-				color: var(--p-color);
-			}
-			img{
-				max-width: 20em;
-			}
-			#editor{
-				border: 8px solid var(--p-color);
-				border-radius: 1em;
-				min-width: 50vh;
-				max-height: 50vh;
-			}
-			.none{
-				display: none;
-			}
-			#paleta{
-				border: 8px solid var(--p-color);
-				border-radius: 1em;
-				min-width: 50vh;
-				max-height: 1em;
-			}
-			canvas{
-				display: none;
-			}
-			button{
-				font-size: 1.5em;
-				padding: 0.5em 3em;
-				background: var(--button-bg);
-				border: none;
-				border-radius: 0.3em;
-				transition: color 3s, background 0.1s;
-			}
-			.flex-row{
-				display: flex;
-				flex-direction: row;
-				justify-content: center;
-				align-items: center;
-				gap: 1em;
-			}
-			.text{
-				padding-left: 1em;
-				
-			}
-			
-			.bordered{
-				border: 2px dashed var(--button-bg);
-				border-radius: 0.3em;
-			}
-			
-			.flex-column{
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-				gap: 1em;
-			}
-			.input__image_template[type="file"], .input__image_grid{
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				padding: 0;
-				width: 4em;
-				height: 4em;
-				border: none;
-				border-radius: 0.3em;
-				color: var(--button-color);
-				font-size: 0.9em;
-				position: relative;
-			}
-			.input__image_template::before, .input__image_grid::after{
-				content: '';
-				position: absolute;
-				top: 0;
-				left: 0;
-				font-size: 3em;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				width: 100%;
-				height: 100%;
-				background-color: var(--button-bg);
-				color: var(--button-color);
-				background-image: url("UploadIcon.png");
-				background-size: 100%;
-			}
-			.map__type{
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				font-size: 1.5em;
-				background: var(--button-bg);
-				border: none;
-				border-radius: 0.3em;
-				padding: 0.5em 1em;
-			}
-			.output{
-				border-radius: 0.3em;
-				padding: 1em;
-				background: var(--button-bg);
-			}
-		</style>
+		<link rel = "stylesheet" href = "reset.css"/>
+		<link rel = "stylesheet" href = "style.css"/>
 	</head>
 	<body>
 		<h1 class = "inclusive-sans-bolder">Criador de TileSet</h1>
 		<div class = "flex-column">
-			<img class = "main_img none">
-			<img class = "pallet_img none">
 			<canvas id = "editor"></canvas>
 			<canvas id = "paleta"></canvas>
 		</div>
-		<div class = "flex-row bordered inclusive-sans">
-			<label class = "text"> paleta de cores vão aqui:</label>
-			<input class = "input__image_template" type = "file" accept = "image/*"/>
-		</div>
-		<div class = "flex-row bordered inclusive-sans">
-			<label class = "text">a imagem que você quer converter vai aqui: </label>
-			<input class = "input__image_grid" type = "file" accept = "image/*"/>
+		<input class = "input__image_template" type = "file" accept = "image/*"/>
+		<input class = "input__image_grid" type = "file" accept = "image/*"/>
+		<div class = flex-column>
+			<img class = "pallet_img none">
+			<img class = "main_img none">
 		</div>
 		<div class = "flex-row inclusive-sans">
 			<select class = "map__type inclusive-sans">
@@ -165,6 +30,15 @@
 			<button class = "sendBtn inclusive-sans" onclick = "calculate_andSend()">Calcular</button>
 		</div>
 		<button class = "output inclusive-sans-bolder none" onclick="download()">baixar</button>
+		<div class = "map-visualization none">
+			<div class = "flex-column inclusive-sans">
+				<label class = "text">template de tileset para visuaizar</label>
+				<input class = "input__tile" type = "file" accept = "image/*"/>
+				<input class = "input__tileSize" type = "number" required/>
+			</div>
+			<button class = "sendBtn inclusive-sans" onclick = "drawMap()">visualizar</button>
+			<canvas id = "mapCanvas"></canvas>
+		</div>
 	</body>
 	
 	<script src = "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
