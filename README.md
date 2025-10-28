@@ -59,7 +59,11 @@ após eu focar no funky pack eu tava mais vacinado contra event listeners e deci
 - o metodo atual se baseia em pegar duas imagens e comparar os pixels da segunda com a primeira para gerar uma matriz. É quase como se fosse uma tabela hash só que sem as operações malucas de cálculo de colisão.
 - o arquivo gerado é do tipo JSON. que acredite ou não, é util por conta do jogo ser realmente em javascript.
 - As atualizações atuais constam agora um sistema de pré-visualização que faz com que você tenha uma noção de como o map vai ser desenhado.
-- em progresso, um sistema mais interativo de mapa como um editor dedicado tile a tile
+
+versão 1.0.1 em progresso
+-
+
+- A adição de um sistema mais interativo e robusto de mapa. um editor dedicado tal qual o tiled (não é um clone direto do tiled porque eu nunca o usei, mas sabe como é...). sistema de grid e camadas que você consegue declarar objetos e tudo mais
 
 Conclusão
 -
