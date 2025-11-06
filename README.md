@@ -60,10 +60,12 @@ após eu focar no funky pack eu tava mais vacinado contra event listeners e deci
 - o arquivo gerado é do tipo JSON. que acredite ou não, é util por conta do jogo ser realmente em javascript.
 - As atualizações atuais constam agora um sistema de pré-visualização que faz com que você tenha uma noção de como o map vai ser desenhado.
 
-versão 1.5 em progresso
+versão 1.5
 -
 
-- A adição de um sistema mais interativo e robusto de mapa. um editor dedicado tal qual o tiled (não é um clone direto do tiled porque eu nunca o usei, mas sabe como é...). sistema de grid e camadas que você consegue declarar objetos e tudo mais
+- Eu consegui me podar mais contra os event listeners. Aparentemente eu masterei os controles de toque (eu não exatamente masterei eles, mas agora não existe mais a disparidade antiga de você tocar e o toque registrar em uma coordenada longe
+- Assim eu tenho a versão 1.5. Em que eu expandi para um horizonte mais interativo. O usuario agora poderá criar os próprios mapas do zero sem precisar colocar imagens. Alêm disso, houve o desenvolvimento de um algoritmo para automatizar o calculo do tileset de sombra (porém ainda não 100% testado) ele se baseia em pegar uma grid originalmente com só zeros e quando detectada uma elevação na tile de relevo ela aumenta a layer da coluna, fazendo com que a drawing order fique automatizada.
+- Em breve trabalharei na versão 1.6. que trará a possibilidade de implementar novas imagens de tilesets que poderão ser implementadas com tamanhos diferentes. Além disso, após os devidos testes o algoritmo de calculo de sobras será implementado no 2Image2Tile. o que trará uma nova camada de automação para o projeto
 
 Conclusão
 -

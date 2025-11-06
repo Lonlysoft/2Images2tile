@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang = "pt-br">
+<head>
+	<meta charset = "utf-8">
+	<link rel = "stylesheet" href = "tiled_style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+	<h1>Editor de TileSet</h1>
+	<div class = "flex-row">
+		<a href = "index.html" class = "switch-mode">2Image2Tile</a>
+		<a href = "" class = "switch-mode selected">Editor de Tileset</a>
+	</div>
+	<div class = "mapInfo-menu flex-row">
+		<div class = "flex-row right-division">
+			<input type = "number" class = "input__tileSize" placeholder= "Tile size"/>
+		</div>
+		<input type = "number" class = "input__mapSize" placeholder= "largura"/>
+		<input type = "number" class = "input__mapSize" placeholder= "altura"/>
+		<button class = "btns" id = "btn-aplicar">criar</button>
+	</div>
+	<div class = "flex-row imagery-inputs">
+		<input type = "file" class = "input__image_tilemap"/>
+		<!--<input type = "file" class = "input__file_loadMap"/>-->
+	</div>
+	<main class = "hidden">
+		<div class = "flex-row-left tool-bar">
+			<button class = "relative old-btns">
+				<div class = "preset-limiter absolute hidden top">
+					<canvas id = "canvasTilePreset" class = " tilemapAssets"></canvas>
+				</div>
+				<i class = "fa-solid fa-square"></i>
+			</button>
+			<div class = "exitLayerMode hidden"></div>
+			<button class = "relative old-btns" id = "btn-layers">
+				<div class = "hidden flex-column absolute camadas less-bottom">
+					<h4>Suas Camadas</h4>
+					
+					<div> não há camadas por enquanto </div>
+					<div class = "flex-row" id = "tool-bar-camadas">
+						<div id = "btn-add-camadas">Add</div>
+						<div id = "btn-rm-camadas">delete</div>
+					</div>
+				</div>
+				<i class = "fa-solid fa-arrow-up"></i>
+			</button>
+			<button class = "old-btns" id = "btn-salvar">
+				<i class = "fa-solid fa-save"></i>
+			</button>
+			<button class = "old-btns" id = "btn-informacoes">
+				<i class = "fa-solid fa-info"></i>
+			</button>
+			<button class = "old-btns" id = "btn-undo">
+				<i class = "fa-solid fa-undo"></i>
+			</button>
+			<button class = "old-btns" id = "btn-redo">
+				<i class = "fa-solid fa-redo"></i>
+			</button>
+		</div>
+		<div class = "hidden flex-row relevoMode">
+			<button class = "btns" id = "btn-minus">-</button>
+			<input type = "number" class = "input__RelevoSize" value = "0"/>
+			<button class = "btns" id = "btn-plus">+</button>
+		</div>
+		<div class = "flex-row">
+			<div class = "multi-canvas"></div>
+		</div>
+	</main>
+	<footer class = "absolute bottom">
+		<h4>&copy Lonlysoft Solutions 2025</h4>
+	</footer>
+</body>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+<script src = "canvas.js"></script>
+<script src = "tiledScript.js"></script>
+</html>

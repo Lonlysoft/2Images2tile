@@ -1,0 +1,272 @@
+:root{
+	--bg: #004643;
+	--h-color: #fffffe;
+	--p-color: #abd1c6;
+	--button-bg: #f9bc60;
+	--button-color: #001e1d;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body{
+	background: var(--bg);
+	width: 100vw;
+	height: 100dvh;
+}
+
+h1, h2, h3, h4, h5, h6{
+	color: var(--h-color)
+}
+
+h1{
+	padding: 1em;
+	text-align: center;
+}
+
+input[type = "number"]{
+	padding: .5em;
+	background: transparent;
+	border: 1px dashed var(--button-bg);
+	color: var(--button-bg);
+	placeholder: var(--button-bg);
+	font-size: 1em;
+	border-radius: .5em;
+	width: 40%;
+}
+
+.btns {
+	padding: 0.5em;
+	background: var(--button-bg);
+	border-radius: 50px;
+	font-size: 1.5rem;
+	border: none;
+}
+
+.btns:active {
+	padding: 0.5em;
+	background: var(--button-color);
+	color: var(--button-bg);
+	border-radius: 50px;
+	font-size: 1.5rem;
+	
+	border: none;
+}
+
+.old-btns{
+	border: 1px dashed var(--button-bg);
+	background: linear-gradient(45deg, transparent, var(--button-bg));
+	padding: 1rem;
+	font-size: 1rem;
+	
+}
+
+canvas.screen{
+	width: 100%;
+	border: 1px solid var(--button-bg);
+	height: 100%;
+}
+.tilemapAssets{
+	border: 1px solid var(--button-bg);
+	border-radius: .5em;
+	width: 100%;
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.flex-column {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.flex-row-left{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.right-division{
+	border-right: 1px solid var(--button-bg);
+}
+
+.mapInfo-menu{
+	gap: 1em;
+	padding: 1em;
+	border-bottom: 1px solid var(--button-bg);
+}
+
+.mapInfo-menu .right-division{
+	gap: 1em;
+	padding-right: 1em;
+}
+
+.mapInfo-menu .right-division select{
+	padding: .5em;
+	background: transparent;
+	border: 1px dashed var(--button-bg);
+	color: var(--button-bg);
+	font-size: 1em;
+	border-radius: .5em;
+}
+
+.imagery-inputs{
+	gap: 1em;
+	padding: 1em;
+}
+
+.multi-canvas{
+	position: relative;
+	width: 90vw;
+	height: 90vw;
+}
+
+.input__file_loadMap[type="file"], .input__image_tilemap{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
+	min-width: 40%;
+	height: 4em;
+	border: none;
+	border-radius: 0.3em;
+	color: var(--button-color);
+	font-size: 0.9em;
+	border: 2px dashed var(--button-bg);
+	position: relative;
+}
+
+.input__file_loadMap[type="file"]:hover, .input__image_tilemap:hover{
+	box-shadow: 0 3px 10px #0003;
+	transition: 0.3s;
+	transform: translate(0, -3px);
+}
+
+.input__file_loadMap::before, .input__image_tilemap::before{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-size: 1em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	background-color: var(--bg);
+	color: var(--button-bg);
+	font-family: "Inclusive Sans", sans-serif;
+}
+
+.input__image_tilemap::before{
+	content: 'seu tilemap vai aqui';
+}
+.input__file_loadMap::before{
+	content: 'carregar mapa?';
+}
+
+.relative{
+	position: relative;
+}
+
+.absolute {
+	position: absolute;
+}
+
+.bottom{
+	bottom: 0;
+}
+
+.less-bottom{
+	bottom: 2rem;
+}
+
+.top{
+	top: 0;
+}
+
+.left{
+	left: 0;
+}
+
+.right{
+	right: 0;
+}
+
+.preset-limiter{
+	overflow: auto;
+	max-height: 20em;
+	width: 25em;
+	z-index: 3;
+}
+
+.camadas{
+	width: 20em;
+	background: #0008;
+	border-radius: .5em;
+	backdrop-filter: blur(5px);
+	padding: .5em;
+	color: var(--button-bg);
+}
+
+.camadas div{
+	width: 100%;
+	background: #000;
+	height: 3em;
+	border-radius: .5em;
+	backdrop-filter: blur(5px);
+	padding: .5em;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.camadas::before{
+	content: '';
+	
+}
+
+.selected{
+	border: 1px solid var(--button-bg);
+}
+
+.switch-mode.selected::after{
+	content: '';
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 2px;
+	left: 0;
+	background: var(--p-color);
+}
+
+.switch-mode{
+	text-decoration: none;
+	position: relative;
+	padding: .5rem;
+	border: none;
+	color: var(--p-color);
+}
+
+.exitLayerMode{
+	width: 100vw;
+	height: 100vh;
+	height: 100dvh;
+	position: absolute;
+	left:0; top: 0;
+	background: #0002;
+}
+
+.hidden{
+	display: none;
+}
+
