@@ -228,7 +228,7 @@ function putPiece(event){
 				tileSize, tileSize
 			);
 		}
-		Map.grids[MapGridsProps[selectedId]][WorldToGrid(canvasX, tileSize)][WorldToGrid(canvasY, tileSize)] = You.selectedPieceId;
+		Map.grids[MapGridsProps[You.selectedLayer]][WorldToGrid(canvasX, tileSize)][WorldToGrid(canvasY, tileSize)] = You.selectedPieceId;
 	} catch (error) {
 		alert("grid não declarada");
 		console.log(error);
