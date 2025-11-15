@@ -16,7 +16,8 @@ const Elements = {
 	relevoMode: document.querySelector(".relevoMode"),
 	toolbar: document.querySelector(".tool-bar"),
 	layerFront: document.querySelector(".camadas"),
-	exitLayerMode: document.querySelector(".exitLayerMode")
+	exitLayerMode: document.querySelector(".exitLayerMode"),
+	hasWaterInput: document.querySelector(".input__hasWater")
 }
 
 class Layer {
@@ -219,7 +220,7 @@ function putPiece(event){
 			context.fillText(You.selectedPieceId, gridCanvasCoords.x + tileSize*0.5, gridCanvasCoords.y + tileSize*0.5);
 		} else{
 			context.drawImage(tiles,
-				You.selectedPieceId*tileSize % tiles.width,
+				You.selectedPieceId * tileSize % tiles.width,
 				Number.parseInt(
 					You.selectedPieceId/WorldToGrid(tiles.width, tileSize)
 				)*tileSize,
@@ -285,8 +286,9 @@ function aplicar(){
 	Map.grids["beings"] = createMatrixWithSomething(Map.width, Map.height, "");
 	Map.grids["npcs"] = createMatrixWithSomething(Map.width, Map.height, 0);
 	Map.grids["items"] = createMatrixWithSomething(Map.width, Map.height, 0);
-	Map.grids["hasWater"] = false;
-	Map.grids["water"] = null;
+	Map.grids["hasWater"] = Elements.hasWaterInput.value;
+	Map.grids["water"] = (Map.grids["hasWater"])? createMatrixWithSomething(Map.width, Map.height, 0): null;
+	
 	Map.grids["shadow"] = createMatrixWithSomething(Map.width, Map.height, 0);
 	for(let i = 0; i < Elements.canvases.length; i++){
 		Elements.canvases[i].canvas.width = Map.width*tileSize;
