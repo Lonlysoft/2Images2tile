@@ -96,6 +96,17 @@ function addLayerAs(type){
 	Elements.layerFront.appendChild(Elements.canvases[Elements.canvases.length-1].layerFront);
 }
 
+function addObjectLayer(){
+	Elements.canvases.push(new Layer("objects"));
+	Elements.multiCanvas.appendChild(Elements.canvases[Elements.canvases.length-1].canvas);
+	Elements.layerFront.appendChild(Elements.canvases[Elements.canvases.length-1].layerFront);
+	Map.grids.objects.push(createMatrixWithSomething(Map.width, Map.height, -1));
+	let tileSize = Number(Elements.tamanhoInput.value)
+	Elements.canvases[Elements.canvases.length-1].canvas.width = Map.width*tileSize;
+	Elements.canvases[Elements.canvases.length-1].canvas.height = Map.height*tileSize;
+	DRAW__Grid(Elements.canvases[Elements.canvases.length-1].tipo, Elements.canvases[Elements.canvases.length-1].canvas.ctx, Map.grids.objects[Map.grids.objects.length-1], tileSize, tiles);
+}
+
 const RelevoButtons = {
 	plus: document.querySelector("#btn-plus"),
 	minus: document.querySelector("#btn-minus"),
@@ -175,7 +186,7 @@ function events(){
 		RelevoButtons.input.value = --RelevoButtons.value;
 	});
 	RelevoButtons.input.addEventListener("change", ()=>{
-		You.selectedPieceId = RelevoButtons.input.value;
+		You.selectedPieceId = Number(RelevoButtons.input.value);
 	});
 	ToolBar.verTiles.addEventListener("click", ()=>{
 		Elements.canvasPreset.classList.toggle("hidden");
@@ -189,7 +200,7 @@ function events(){
 		Elements.exitLayerMode.classList.add("hidden");
 	});
 	UIbuttons.salvar.addEventListener("click", salvarMapa);
-	ElementosCamadas.adicionar.addEventListener("click", addLayer);
+	ElementosCamadas.adicionar.addEventListener("click", addObjectLayer);
 	//ElementosCamadas.deletar.addEventListener("click", removeLayer);
 }
 
@@ -229,7 +240,12 @@ function putPiece(event){
 				tileSize, tileSize
 			);
 		}
-		Map.grids[MapGridsProps[You.selectedLayer]][WorldToGrid(canvasX, tileSize)][WorldToGrid(canvasY, tileSize)] = You.selectedPieceId;
+		if(You.selectedLayer < 2){
+			Map.grids[MapGridsProps[You.selectedLayer]][WorldToGrid(canvasX, tileSize)][WorldToGrid(canvasY, tileSize)] = You.selectedPieceId;
+		}else{
+			Map.grids.objects[You.selectedLayer-2][WorldToGrid(canvasX, tileSize)][WorldToGrid(canvasY, tileSize)] = You.selectedPieceId;
+			
+		}
 	} catch (error) {
 		alert("grid não declarada");
 		console.log(error);
@@ -288,7 +304,7 @@ function aplicar(){
 	Map.grids["items"] = createMatrixWithSomething(Map.width, Map.height, 0);
 	Map.grids["hasWater"] = Elements.hasWaterInput.value;
 	Map.grids["water"] = (Map.grids["hasWater"])? createMatrixWithSomething(Map.width, Map.height, 0): null;
-	
+	Map.grids["objects"] = [];
 	Map.grids["shadow"] = createMatrixWithSomething(Map.width, Map.height, 0);
 	for(let i = 0; i < Elements.canvases.length; i++){
 		Elements.canvases[i].canvas.width = Map.width*tileSize;

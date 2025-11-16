@@ -266,6 +266,11 @@ canvas.screen{
 	background: #0002;
 }
 
+.water_check{
+	gap: 1em;
+	color: var(--button-bg);
+}
+
 .hidden{
 	display: none;
 }
