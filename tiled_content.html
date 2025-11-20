@@ -11,23 +11,41 @@
 		<a href = "index.html" class = "switch-mode">2Image2Tile</a>
 		<a href = "" class = "switch-mode selected">Editor de Tileset</a>
 	</div>
-	<div class = "mapInfo-menu flex-row">
-		<div class = "flex-row right-division">
-			<input type = "number" class = "input__tileSize" placeholder= "Tile size"/>
-		</div>
-		<input type = "number" class = "input__mapSize" placeholder= "largura"/>
-		<input type = "number" class = "input__mapSize" placeholder= "altura"/>
-		<label class = "flex-row water_check">
-			<input type = "checkbox" class = "input__hasWater"/>
-			<p class = "slider">água?</p>
-		</label>
-		<button class = "btns" id = "btn-aplicar">criar</button>
+	<div class = "mapInfo-menu flex-column">
+		<input type="text" class = "input__mapName" placeholder = "nome do mapa"/>
+		<section class = "flex-row">
+			<div class = "flex-row right-division">
+				<input type = "number" class = "input__tileSize" placeholder= "Tile size"/>
+			</div>
+			<label class = "flex-row-center std-gap">
+				<input type = "number" class = "input__mapSize" placeholder= "largura"/>
+				<input type = "number" class = "input__mapSize" placeholder= "altura"/>
+			</label>
+		</section>
+		<section class = "flex-row">
+			<section class = "flex-column-left std-gap right-division">
+				<h3>Adereços extras</h3>
+				<label class = "flex-row water_check">
+					<div class = "toggler flex-row-left input__hasWater">
+						<div class = "ball-indicator"></div>
+					</div>
+					<p class = "slider">água?</p>
+				</label>
+				<label class = "flex-row water_check">
+					<div class = "toggler flex-row-left input__hasEnemy">
+						<div class = "ball-indicator"></div>
+					</div>
+					<p class = "slider">inimigos?</p>
+				</label>
+			</section>
+			<div class = "flex-row imagery-inputs">
+				<input type = "file" class = "input__image_tilemap"/>
+				<!--<input type = "file" class = "input__file_loadMap"/>-->
+			</div>
+		</section>
+		<button class = "btns full-btn" id = "btn-aplicar">criar</button>
 	</div>
-		
-	<div class = "flex-row imagery-inputs">
-		<input type = "file" class = "input__image_tilemap"/>
-		<!--<input type = "file" class = "input__file_loadMap"/>-->
-	</div>
+	
 	<main class = "hidden">
 		<div class = "flex-row-left tool-bar">
 			<button class = "relative old-btns">

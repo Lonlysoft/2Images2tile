@@ -37,6 +37,18 @@ input[type = "number"]{
 	width: 40%;
 }
 
+input[type = "text"]{
+	padding: .5em;
+	background: transparent;
+	border: 1px dashed var(--button-bg);
+	color: var(--button-bg);
+	placeholder: var(--button-bg);
+	font-size: 1.5em;
+	border-radius: .5em;
+	width: 90%;
+	
+}
+
 .btns {
 	padding: 0.5em;
 	background: var(--button-bg);
@@ -45,13 +57,34 @@ input[type = "number"]{
 	border: none;
 }
 
+.toggler{
+	padding: 0.75em 0.2em;
+	width: 2.5em;
+	height: 1em;
+	background: var(--button-bg);
+	color:  var(--button-color);
+	border-radius: 20px;
+}
+
+.toggler div{
+	width: 1em;
+	height: 1em;
+	background: var(--button-color);
+	border-radius: 50%;
+	transition: 0.5s;
+}
+
+.toggler.active div{
+	transform: translateX(1em);
+	transition: 0.5s;
+}
+
 .btns:active {
 	padding: 0.5em;
 	background: var(--button-color);
 	color: var(--button-bg);
 	border-radius: 50px;
 	font-size: 1.5rem;
-	
 	border: none;
 }
 
@@ -81,6 +114,13 @@ canvas.screen{
 	align-items: center;
 }
 
+.flex-row-center {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
 .flex-column {
 	display: flex;
 	flex-direction: column;
@@ -95,6 +135,17 @@ canvas.screen{
 	align-items: center;
 }
 
+.flex-column-left{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.std-gap{
+	gap: 1em;
+}
+
 .right-division{
 	border-right: 1px solid var(--button-bg);
 }
@@ -102,7 +153,9 @@ canvas.screen{
 .mapInfo-menu{
 	gap: 1em;
 	padding: 1em;
-	border-bottom: 1px solid var(--button-bg);
+	border: 2px dotted var(--button-bg);
+	margin: 1em;
+	border-radius: 1em;
 }
 
 .mapInfo-menu .right-division{
@@ -269,6 +322,10 @@ canvas.screen{
 .water_check{
 	gap: 1em;
 	color: var(--button-bg);
+}
+
+.full-btn{
+	width: 90%;
 }
 
 .hidden{

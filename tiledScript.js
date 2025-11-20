@@ -3,6 +3,7 @@ let stottic = 0;
 const Elements = {
 	multiCanvas: document.querySelector(".multi-canvas"),
 	mapInfoMenu: document.querySelector(".mapInfo-menu"),
+	mapName: document.querySelector(".input__mapName"),
 	main: document.querySelector("main"),
 	canvases: [],
 	canvasPreset: document.querySelector("#canvasTilePreset"),
@@ -17,7 +18,8 @@ const Elements = {
 	toolbar: document.querySelector(".tool-bar"),
 	layerFront: document.querySelector(".camadas"),
 	exitLayerMode: document.querySelector(".exitLayerMode"),
-	hasWaterInput: document.querySelector(".input__hasWater")
+	hasWaterInput: document.querySelector(".input__hasWater"),
+	enemyChecker: document.querySelector(".input__hasEnemy")
 }
 
 class Layer {
@@ -177,6 +179,14 @@ function events(){
 		
 	});
 	*/
+	Elements.hasWaterInput.addEventListener("click", ()=>{
+		Elements.hasWaterInput.value = (Elements.hasWaterInput.value == "true")? "false": "true";
+		Elements.hasWaterInput.classList.toggle("active");
+	});
+	Elements.enemyChecker.addEventListener("click", ()=>{
+		Elements.enemyChecker.value = (Elements.enemyChecker.value == "true")? "false": "true";
+		Elements.enemyChecker.classList.toggle("active");
+	});
 	Elements.imageInput.addEventListener("change", handleTileSet);
 	UIbuttons.aplicar.addEventListener("click", aplicar);
 	RelevoButtons.plus.addEventListener("click", ()=>{
@@ -223,7 +233,7 @@ function putPiece(event){
 		}
 		context.clearRect(gridCanvasCoords.x, gridCanvasCoords.y, tileSize, tileSize);
 		if(Elements.canvases[You.selectedLayer].tipo == "relevo"){
-			You.selectedPieceId = RelevoButtons.input.value;
+			You.selectedPieceId = Number(RelevoButtons.input.value);
 			context.beginPath();
 			context.strokeStyle = "#f9bc60";
 			context.rect(gridCanvasCoords.x , gridCanvasCoords.y, tileSize, tileSize);
@@ -294,7 +304,8 @@ function aplicar(){
 	Elements.canvasPreset.width = tiles.width;
 	Elements.canvasPreset.height = tiles.height;
 	Elements.canvasPreset.ctx.drawImage(tiles, 0, 0, tiles.width, tiles.height);
-	let tileSize = Number(Elements.tamanhoInput.value)
+	let tileSize = Number(Elements.tamanhoInput.value);
+	let hasEnemies = (Elements.enemyChecker.value == "true")? true : false;
 	for(let i = 0; i < MapGridsProps.length; i++){
 		addLayerAs(MapGridsProps[i]);
 		Map.grids[MapGridsProps[i]] = createMatrixWithSomething(Map.width, Map.height, 0);
@@ -302,8 +313,11 @@ function aplicar(){
 	Map.grids["beings"] = createMatrixWithSomething(Map.width, Map.height, "");
 	Map.grids["npcs"] = createMatrixWithSomething(Map.width, Map.height, 0);
 	Map.grids["items"] = createMatrixWithSomething(Map.width, Map.height, 0);
-	Map.grids["hasWater"] = Elements.hasWaterInput.value;
+	Map.grids["hasWater"] = (Elements.hasWaterInput.value == "true")? true : false;
 	Map.grids["water"] = (Map.grids["hasWater"])? createMatrixWithSomething(Map.width, Map.height, 0): null;
+	if(hasEnemies){
+		Map.grids["enemies"] = createMatrixWithSomething(Map.width, Map.height, 0);
+	}
 	Map.grids["objects"] = [];
 	Map.grids["shadow"] = createMatrixWithSomething(Map.width, Map.height, 0);
 	for(let i = 0; i < Elements.canvases.length; i++){
@@ -316,7 +330,7 @@ function aplicar(){
 function download(){
 	calculateRelevo(Map);
 	const blob = new Blob([JSON.stringify(Map, null, 2)], {type: "application/JSON"});
-	saveAs(blob, "MAPS"+".json");
+	saveAs(blob, Elements.mapName.value+".json");
 }
 
 function salvarMapa(){
