@@ -99,7 +99,6 @@ input[type = "text"]{
 canvas.screen{
 	width: 100%;
 	border: 1px solid var(--button-bg);
-	height: 100%;
 }
 .tilemapAssets{
 	border: 1px solid var(--button-bg);
@@ -180,7 +179,6 @@ canvas.screen{
 .multi-canvas{
 	position: relative;
 	width: 90vw;
-	height: 90vw;
 }
 
 .input__file_loadMap[type="file"], .input__image_tilemap{
@@ -233,6 +231,10 @@ canvas.screen{
 
 .absolute {
 	position: absolute;
+}
+
+.fixed{
+	position: fixed;
 }
 
 .bottom{

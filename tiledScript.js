@@ -70,7 +70,7 @@ class Layer {
 			this.layerFront.classList.toggle("selected");
 			this.canvas.addEventListener("click", putPiece);
 			You.selectedLayer = this.id;
-			if(this.tipo == "relevo"){
+			if(this.tipo == "ground"){
 				Elements.canvasPreset__delimiter.classList.add("hidden");
 				Elements.relevoMode.classList.toggle("hidden");
 				Elements.imageInput.classList.add("hidden");
@@ -232,7 +232,7 @@ function putPiece(event){
 			y: GridToWorld(WorldToGrid(canvasY, tileSize), tileSize)
 		}
 		context.clearRect(gridCanvasCoords.x, gridCanvasCoords.y, tileSize, tileSize);
-		if(Elements.canvases[You.selectedLayer].tipo == "relevo"){
+		if(Elements.canvases[You.selectedLayer].tipo == "ground"){
 			You.selectedPieceId = Number(RelevoButtons.input.value);
 			context.beginPath();
 			context.strokeStyle = "#f9bc60";
@@ -251,9 +251,10 @@ function putPiece(event){
 			);
 		}
 		if(You.selectedLayer < 2){
-			Map.grids[MapGridsProps[You.selectedLayer]][WorldToGrid(canvasX, tileSize)][WorldToGrid(canvasY, tileSize)] = You.selectedPieceId;
+			Map.grids[MapGridsProps[You.selectedLayer]][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
+			
 		}else{
-			Map.grids.objects[You.selectedLayer-2][WorldToGrid(canvasX, tileSize)][WorldToGrid(canvasY, tileSize)] = You.selectedPieceId;
+			Map.grids.objects[You.selectedLayer-2][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
 			
 		}
 	} catch (error) {

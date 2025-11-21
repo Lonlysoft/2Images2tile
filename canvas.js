@@ -11,7 +11,7 @@ function DRAW__Grid(type, context, grid2Draw, tileSize, gridImage, tileImageSize
 		let renderPlusY = i * tileSize;
 		for(let j = 0; j < grid2Draw[i].length; j++){
 			let renderPlusX = j * tileSize;
-			if(type !== "relevo"){
+			if(type !== "ground"){
 				context.drawImage(
 					gridImage, grid2Draw[i][j]*tileImageSize % gridImage.width,
 					Number.parseInt(grid2Draw[i][j]/WorldToGrid(gridImage.width, tileImageSize))* tileImageSize,
@@ -45,4 +45,4 @@ function calculateRelevo(map){
 	}
 }
 
-const MapGridsProps = ["relevo", "floor"];
+const MapGridsProps = ["floor", "ground"];
