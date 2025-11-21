@@ -35,6 +35,7 @@ input[type = "number"]{
 	font-size: 1em;
 	border-radius: .5em;
 	width: 40%;
+	transition: 0.1s;
 }
 
 input[type = "text"]{
@@ -46,7 +47,13 @@ input[type = "text"]{
 	font-size: 1.5em;
 	border-radius: .5em;
 	width: 90%;
-	
+	transition: 0.1s;
+}
+
+input[type = "number"]:focus, input[type = "text"]:focus{
+	outline: none;
+	border: 2px solid var(--button-bg);
+	transition: 0.1s;
 }
 
 .btns {
@@ -270,6 +277,7 @@ canvas.screen{
 	border-radius: .5em;
 	backdrop-filter: blur(5px);
 	padding: .5em;
+	z-index: 4;
 	color: var(--button-bg);
 }
 
