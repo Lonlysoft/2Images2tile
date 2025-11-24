@@ -164,6 +164,15 @@ function handleTileSet(e){
 	saveTiles(arq);
 }
 
+function loadMap(e){
+	const arq = e.target.files[0];
+	const leitor = new FileReader();
+	leitor.onload = function(e){
+		Map = JSON.parse(e.target.result);
+	}
+	leitor.readAsDataURL(file);
+}
+
 const You = {
 	selectedPieceId: undefined,
 	selectedLayer: 0
@@ -174,11 +183,10 @@ let selectedId = 0;
 
 function events(){
 	Elements.canvasPreset.addEventListener("click", choosePiece);
-	/*
-	Elements.selectInput.addEventListener("change", ()=>{
-		
+	Elements.loadMapInput.addEventListener("change", (e)=>{
+		loadMap(e);
+		let tileSize = Number(Elements.tamanhoInput.value);
 	});
-	*/
 	Elements.hasWaterInput.addEventListener("click", ()=>{
 		Elements.hasWaterInput.value = (Elements.hasWaterInput.value == "true")? "false": "true";
 		Elements.hasWaterInput.classList.toggle("active");
@@ -294,7 +302,28 @@ function choosePiece(event){
 	}
 }
 
+function aplicarComMapaDefinido(){
+	Elements.mapInfoMenu.classList.add("hidden")
+	Elements.main.classList.remove("hidden");
+	Elements.canvasPreset.width = tiles.width;
+	Elements.canvasPreset.height = tiles.height;
+	Elements.canvasPreset.ctx.drawImage(tiles, 0, 0, tiles.width, tiles.height);
+	let tileSize = Number(Elements.tamanhoInput.value);
+	for(let i = 0; i < MapGridsProps.length; i++){
+		addLayerAs(MapGridsProps[i]);
+		Map.grids[MapGridsProps[i]] = createMatrixWithSomething(Map.width, Map.height, 0);
+	} 
+	if(Map.grids.enemies){
+		hasEnemies = true;
+	}
+	// por razões [i][j]++ irão acontecer problemas de camadas, então vamos resetar as sombras e calculá-las quando o usuario apertar em baixar.
+	Map.grids["shadow"] = createMatrixWithSomething(Map.width, Map.height, 0);
+}
+
 function aplicar(){
+	if(Map){
+		aplicarComMapaDefinido();
+	}
 	Map = {
 		width: Number(Elements.larguraInput.value),
 		height: Number(Elements.alturaInput.value),
@@ -306,11 +335,11 @@ function aplicar(){
 	Elements.canvasPreset.height = tiles.height;
 	Elements.canvasPreset.ctx.drawImage(tiles, 0, 0, tiles.width, tiles.height);
 	let tileSize = Number(Elements.tamanhoInput.value);
-	let hasEnemies = (Elements.enemyChecker.value == "true")? true : false;
 	for(let i = 0; i < MapGridsProps.length; i++){
 		addLayerAs(MapGridsProps[i]);
 		Map.grids[MapGridsProps[i]] = createMatrixWithSomething(Map.width, Map.height, 0);
 	}
+	let hasEnemies = (Elements.enemyChecker.value == "true")? true : false;
 	Map.grids["beings"] = createMatrixWithSomething(Map.width, Map.height, "");
 	Map.grids["npcs"] = createMatrixWithSomething(Map.width, Map.height, 0);
 	Map.grids["items"] = createMatrixWithSomething(Map.width, Map.height, 0);

@@ -12,6 +12,7 @@
 		<a href = "" class = "switch-mode selected">Editor de Tileset</a>
 	</div>
 	<div class = "mapInfo-menu flex-column">
+		<input type = "file" class = "hidden input__file_loadMap"/>
 		<input type="text" class = "input__mapName" placeholder = "nome do mapa"/>
 		<section class = "flex-row">
 			<div class = "flex-row right-division">
@@ -37,10 +38,23 @@
 					</div>
 					<p class = "slider">inimigos?</p>
 				</label>
+				<label class = "flex-row water_check">
+					<div class = "toggler flex-row-left input__placeableItems">
+						<div class = "ball-indicator"></div>
+					</div>
+					<p class = "slider">colocar items?</p>
+				</label>
+				<label class = "flex-row water_check">
+					<div class = "toggler flex-row-left input__placeableNPCs">
+						<div class = "ball-indicator"></div>
+					</div>
+					<p class = "slider">colocar npcs?</p>
+				</label>
 			</section>
 			<div class = "flex-row imagery-inputs">
 				<input type = "file" class = "input__image_tilemap"/>
-				<!--<input type = "file" class = "input__file_loadMap"/>-->
+				<input type = "file" class = "hidden input__image_items"/>
+				<input type = "file" class = "hidden input__image_furniture"/>
 			</div>
 		</section>
 		<button class = "btns full-btn" id = "btn-aplicar">criar</button>
@@ -56,7 +70,7 @@
 			</button>
 			<div class = "exitLayerMode hidden"></div>
 			<button class = "relative old-btns" id = "btn-layers">
-				<div class = "hidden flex-column absolute camadas less-bottom">
+				<div class = "hidden flex-column absolute camadas top">
 					<h4>Suas Camadas</h4>
 					
 					<div> não há camadas por enquanto </div>

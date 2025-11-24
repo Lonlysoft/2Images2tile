@@ -36,7 +36,7 @@ function calculateRelevo(map){
 	let layerIndex = 0
 	for(let i = 1; i < map.height; i++){
 		for(let j = 0; j < map.width; j++){
-			if(map.grids.relevo[i][j] > map.grids.relevo[i-1][j]){
+			if(map.grids.ground[i][j] > map.grids.ground[i-1][j]){
 				for(let k = i; k < map.height; k++){
 					map.grids.shadow[k][j]++;
 				}
