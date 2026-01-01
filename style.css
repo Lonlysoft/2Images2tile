@@ -127,7 +127,6 @@ button{
 }
 .input__image_grid::before{
 	content: 'a imagem que você quer converter vai aqui';
-	
 }
 .map__type{
 	display: flex;

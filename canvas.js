@@ -45,4 +45,19 @@ function calculateRelevo(map){
 	}
 }
 
+class Objectus{
+	constructor (type, frameX, width, frameY = frameX, height = width){
+		this.frameX = x;
+		this.frameY = y;
+		this.type = type;
+		this.width = width;
+		this.height = height;
+	}
+	draw(x, y){ // x, y são em grid
+		let worldX = GridToWorld(x, tileSize) + tileSize *0.5;
+		let worldY = GridToWorld(y, tileSize) + tileSize
+		ctx.drawImage(objectImage[this.type], this.frameX, this.frameY, this.width, this.height, worldX - this.width*0.5, worldY- this.height, this.width, this.height);
+	}
+}
+
 const MapGridsProps = ["floor", "ground"];

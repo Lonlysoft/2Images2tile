@@ -6,6 +6,7 @@ esse foi um sub-projeto que eu por algum motivo fiz para fazer tilesets mais rá
 # Imagens do Projeto
 
 <img src = "screenshots/img1.jpg" alt = "imagem_principal">
+<img src = "screenshots/img2.jpg" alt = "imagem_secundaria">
 
 O problema que já tinha sido resolvido para todo mundo, mas não para mim
 -

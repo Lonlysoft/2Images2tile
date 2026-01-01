@@ -1,6 +1,7 @@
 let stottic = 0;
 
 const Elements = {
+	//multi canvas
 	multiCanvas: document.querySelector(".multi-canvas"),
 	mapInfoMenu: document.querySelector(".mapInfo-menu"),
 	mapName: document.querySelector(".input__mapName"),
@@ -11,6 +12,8 @@ const Elements = {
 	selectInput: document.querySelector(".initialType"),
 	imageInput: document.querySelector(".input__image_tilemap"),
 	loadMapInput: document.querySelector(".input__file_loadMap"),
+	itemInput: document.querySelector(".input__image_items"),
+	npcInput: document.querySelector(".input__image_npcs"),
 	tamanhoInput: document.querySelector(".input__tileSize"),
 	larguraInput: document.querySelectorAll(".input__mapSize")[0],
 	alturaInput: document.querySelectorAll(".input__mapSize")[1],
@@ -19,7 +22,9 @@ const Elements = {
 	layerFront: document.querySelector(".camadas"),
 	exitLayerMode: document.querySelector(".exitLayerMode"),
 	hasWaterInput: document.querySelector(".input__hasWater"),
-	enemyChecker: document.querySelector(".input__hasEnemy")
+	enemyChecker: document.querySelector(".input__hasEnemy"),
+	itemChecker: document.querySelector(".input__placeableItems"),
+	npcChecker: document.querySelector(".input__placeableNPCs")
 }
 
 class Layer {
@@ -66,9 +71,11 @@ class Layer {
 			for(let i = 0; i < Elements.canvases.length; i++){
 				Elements.canvases[i].layerFront.classList.remove("selected");
 				Elements.canvases[i].canvas.removeEventListener("click", putPiece);
+				Elements.canvases[i].canvas.removeEventListener("touchmove", putPieceTouchMove);
 			}
 			this.layerFront.classList.toggle("selected");
 			this.canvas.addEventListener("click", putPiece);
+			this.canvas.addEventListener("touchmove", putPieceTouchMove);
 			You.selectedLayer = this.id;
 			if(this.tipo == "ground"){
 				Elements.canvasPreset__delimiter.classList.add("hidden");
@@ -164,6 +171,33 @@ function handleTileSet(e){
 	saveTiles(arq);
 }
 
+const objectImage = {
+	items: null,
+	npcs: null
+};
+
+function saveNPCimage(e){
+	const arq = e.target.files[0];
+	const leitor = new FileReader();
+	leitor.onload = function(e){
+		objectImage.npcs = new Image();
+		objectImage.npcs.src = e.target.result;
+	}
+	leitor.readAsDataURL(file);
+}
+
+function saveItemImage(e){
+	const arq = e.target.files[0];
+	const leitor = new FileReader();
+	leitor.onload = function(e){
+		objectImage.items = new Image();
+		objectImage.items.src = e.target.result;
+	}
+	leitor.readAsDataURL(file);
+}
+
+
+
 function loadMap(e){
 	const arq = e.target.files[0];
 	const leitor = new FileReader();
@@ -179,6 +213,7 @@ const You = {
 }
 
 let Map = undefined;
+let standardGridLength = 2;
 let selectedId = 0;
 
 function events(){
@@ -194,6 +229,11 @@ function events(){
 	Elements.enemyChecker.addEventListener("click", ()=>{
 		Elements.enemyChecker.value = (Elements.enemyChecker.value == "true")? "false": "true";
 		Elements.enemyChecker.classList.toggle("active");
+	});
+	Elements.itemChecker.addEventListener("click", ()=>{
+		Elements.itemChecker.value = (Elements.itemChecker.value == "true")? "false": "true";
+		Elements.itemChecker.classList.toggle("active");
+		Elements.itemInput.classList.toggle("hidden");
 	});
 	Elements.imageInput.addEventListener("change", handleTileSet);
 	UIbuttons.aplicar.addEventListener("click", aplicar);
@@ -220,6 +260,7 @@ function events(){
 	UIbuttons.salvar.addEventListener("click", salvarMapa);
 	ElementosCamadas.adicionar.addEventListener("click", addObjectLayer);
 	//ElementosCamadas.deletar.addEventListener("click", removeLayer);
+	FurniturePositioning.events();
 }
 
 function putPiece(event){
@@ -247,6 +288,8 @@ function putPiece(event){
 			context.rect(gridCanvasCoords.x , gridCanvasCoords.y, tileSize, tileSize);
 			context.stroke();
 			context.fillText(You.selectedPieceId, gridCanvasCoords.x + tileSize*0.5, gridCanvasCoords.y + tileSize*0.5);
+		}else if(Elements.canvases[You.selectedLayer].tipo == "items"){
+			
 		} else{
 			context.drawImage(tiles,
 				You.selectedPieceId * tileSize % tiles.width,
@@ -258,18 +301,70 @@ function putPiece(event){
 				tileSize, tileSize
 			);
 		}
-		if(You.selectedLayer < 2){
+		if(You.selectedLayer < standardGridLength){
 			Map.grids[MapGridsProps[You.selectedLayer]][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
 			
 		}else{
 			Map.grids.objects[You.selectedLayer-2][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
-			
 		}
 	} catch (error) {
 		alert("grid não declarada");
 		console.log(error);
 	}
 }
+
+function putPieceTouchMove(ev){
+	ev.preventDefault();
+	let event = ev.touches[0];
+	let context = Elements.canvases[You.selectedLayer].canvas.ctx;
+	try{
+		let tileSize = Number(Elements.tamanhoInput.value)
+		let client_width = Math.floor(Elements.canvases[You.selectedLayer].canvas.clientWidth);
+		let client_height = Math.floor(Elements.canvases[You.selectedLayer].canvas.clientHeight);
+		let aspectRatio = Elements.canvases[You.selectedLayer].canvas.width/client_width;
+		let aspectRatioHeight = Elements.canvases[You.selectedLayer].canvas.height/client_height;
+		let boundingRect = Elements.canvases[You.selectedLayer].canvas.getBoundingClientRect();
+		let canvasX = (event.clientX - boundingRect.left)*aspectRatio;
+		let canvasY = (event.clientY - boundingRect.top)*aspectRatioHeight;
+		
+		
+		let gridCanvasCoords = {
+			x: GridToWorld(WorldToGrid(canvasX, tileSize), tileSize),
+			y: GridToWorld(WorldToGrid(canvasY, tileSize), tileSize)
+		}
+		context.clearRect(gridCanvasCoords.x, gridCanvasCoords.y, tileSize, tileSize);
+		if(Elements.canvases[You.selectedLayer].tipo == "ground"){
+			You.selectedPieceId = Number(RelevoButtons.input.value);
+			context.beginPath();
+			context.strokeStyle = "#f9bc60";
+			context.rect(gridCanvasCoords.x , gridCanvasCoords.y, tileSize, tileSize);
+			context.stroke();
+			context.fillText(You.selectedPieceId, gridCanvasCoords.x + tileSize*0.5, gridCanvasCoords.y + tileSize*0.5);
+		}else if(Elements.canvases[You.selectedLayer].tipo == "items"){
+			
+		} else{
+			context.drawImage(tiles,
+				You.selectedPieceId * tileSize % tiles.width,
+				Number.parseInt(
+					You.selectedPieceId/WorldToGrid(tiles.width, tileSize)
+				)*tileSize,
+				tileSize, tileSize, 
+				gridCanvasCoords.x, gridCanvasCoords.y,
+				tileSize, tileSize
+			);
+		}
+		if(You.selectedLayer < standardGridLength){
+			Map.grids[MapGridsProps[You.selectedLayer]][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
+			
+		}else{
+			Map.grids.objects[You.selectedLayer-2][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
+		}
+	} catch (error) {
+		alert("grid não declarada");
+		console.log(error);
+	}
+}
+
 function choosePiece(event){
 	let context = Elements.canvasPreset.ctx;
 	try{
@@ -335,6 +430,9 @@ function aplicar(){
 	Elements.canvasPreset.height = tiles.height;
 	Elements.canvasPreset.ctx.drawImage(tiles, 0, 0, tiles.width, tiles.height);
 	let tileSize = Number(Elements.tamanhoInput.value);
+	if(Elements.itemChecker.value == "true"){
+		MapGridsProps.push("items");
+	}
 	for(let i = 0; i < MapGridsProps.length; i++){
 		addLayerAs(MapGridsProps[i]);
 		Map.grids[MapGridsProps[i]] = createMatrixWithSomething(Map.width, Map.height, 0);

@@ -120,6 +120,13 @@ canvas.screen{
 	align-items: center;
 }
 
+.flex-row-responsive{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+}
+
 .flex-row-center {
 	display: flex;
 	flex-direction: row;
@@ -188,7 +195,7 @@ canvas.screen{
 	width: 90vw;
 }
 
-.input__file_loadMap[type="file"], .input__image_tilemap{
+.input__file_loadMap[type="file"], .input__image_tilemap, .input__image_items, .input__image_furniture{
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -203,13 +210,13 @@ canvas.screen{
 	position: relative;
 }
 
-.input__file_loadMap[type="file"]:hover, .input__image_tilemap:hover{
+.input__file_loadMap[type="file"]:hover, .input__image_tilemap:hover, .input__image_items:hover, input__image_furniture:hover{
 	box-shadow: 0 3px 10px #0003;
 	transition: 0.3s;
 	transform: translate(0, -3px);
 }
 
-.input__file_loadMap::before, .input__image_tilemap::before{
+.input__file_loadMap::before, .input__image_tilemap::before, .input__image_items::before, .input__image_furniture::before{
 	content: '';
 	position: absolute;
 	top: 0;
@@ -230,6 +237,14 @@ canvas.screen{
 }
 .input__file_loadMap::before{
 	content: 'carregar mapa?';
+}
+
+.input__image_items::before{
+	content: 'spritesheet de items aqui';
+}
+
+.input__image_furniture::before{
+	content: 'spritesheet de objetos aqui';
 }
 
 .relative{
@@ -267,7 +282,7 @@ canvas.screen{
 .preset-limiter{
 	overflow: auto;
 	max-height: 20em;
-	width: 25em;
+	width: 50vw;
 	z-index: 3;
 }
 
@@ -342,5 +357,12 @@ canvas.screen{
 	display: none;
 }
 
-
+@media (max-width: 30em){
+	.flex-row-responsive{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+}
 

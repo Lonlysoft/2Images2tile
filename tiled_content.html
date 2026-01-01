@@ -23,7 +23,7 @@
 				<input type = "number" class = "input__mapSize" placeholder= "altura"/>
 			</label>
 		</section>
-		<section class = "flex-row">
+		<section class = "flex-row-responsive">
 			<section class = "flex-column-left std-gap right-division">
 				<h3>Adereços extras</h3>
 				<label class = "flex-row water_check">
@@ -50,15 +50,39 @@
 					</div>
 					<p class = "slider">colocar npcs?</p>
 				</label>
+				<label class = "flex-row water_check">
+					<div class = "toggler flex-row-left input__placeableFurniture">
+						<div class = "ball-indicator"></div>
+					</div>
+					<p class = "slider">colocar moveis?</p>
+				</label>
 			</section>
-			<div class = "flex-row imagery-inputs">
+			<div class = "flex-column imagery-inputs">
 				<input type = "file" class = "input__image_tilemap"/>
 				<input type = "file" class = "hidden input__image_items"/>
-				<input type = "file" class = "hidden input__image_furniture"/>
+				<input type = "file" class = "hidden input__image_npcs"/>
+				<div class = "flex-row hidden structure-pre-menu">
+					<input type = "file" class = "input__image_furniture"/>
+					<button class = "btns launch-img"><i class = "fa-solid fa-plus"></i></button>
+				</div>
 			</div>
 		</section>
 		<button class = "btns full-btn" id = "btn-aplicar">criar</button>
 	</div>
+	<section class = "hidden define-furnitures">
+		<div class = "graphics-form">
+			<input type = "number" class = "furniture-min-width"/>
+			<input type = "number" class = "furniture-min-height"/>
+			<button class = "btns recalibrar"> recalibrar </button>
+			<input type = "number" class = "current-furniture-width"/>
+			<input  type = "number" class = "current-furniture-height"/>
+		</div>
+		<canvas id = "canvas-furniture"></canvas>
+		<!-- isso vai me ajudar a fazer os itens mais rápido por mais incrivel que pareça-->
+		<input type = "text" placeholder = "nome do item"/>
+		<button class = "btns add-furn"> adicionar móvel </button>
+		<!-- vai servir para separar os móveis de maneira simples-->
+	</section>
 	
 	<main class = "hidden">
 		<div class = "flex-row-left tool-bar">
@@ -87,11 +111,11 @@
 			<button class = "old-btns" id = "btn-informacoes">
 				<i class = "fa-solid fa-info"></i>
 			</button>
-			<button class = "old-btns" id = "btn-undo">
-				<i class = "fa-solid fa-undo"></i>
+			<button class = "old-btns" id = "btn-items">
+				<i class = "fa-solid fa-cube"></i>
 			</button>
-			<button class = "old-btns" id = "btn-redo">
-				<i class = "fa-solid fa-redo"></i>
+			<button class = "old-btns " id = "btn-furniture">
+				<i class = "fa-solid fa-tree"></i>
 			</button>
 		</div>
 		<div class = "hidden flex-row relevoMode">
@@ -105,9 +129,11 @@
 	</main>
 	<footer class = "fixed bottom">
 		<h4>&copy Lonlysoft Solutions 2025</h4>
+		
 	</footer>
 </body>
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
 <script src = "canvas.js"></script>
+<script src = "furniturePositioning.js"></script>
 <script src = "tiledScript.js"></script>
 </html>
