@@ -25,8 +25,8 @@ Versão Grotesca pré-Magical Sewer.
 
 Já na época do magical sewer eu percebi que não era muito legal escrever e digitar matrizes grandes número por número pra fazer um mapa de jogo. Logo eu criei um software com esse mesmo intuito. entretanto ele não tinha tanta lógica.
 
-- cores não tinham que ser colocadas manualmente em um if else bastante longo e isso não eras nem um pouco automatizando.
-- A matriz resultante era uma matriz de strings que tinham informações de tudo do jogo. isso dava limitações de quão alto as colisões poderiam ser.
+- cores tinham que ser colocadas manualmente em um ```if...else``` bastante longo e isso não era nem um pouco automatizando.
+- A matriz resultante era uma matriz de strings que tinham informações de tudo do jogo. Isso dava limitações de quão alto as colisões poderiam ser.
 - A forma de executar o programa também não era pra das melhores. você teria que ter acesso ao console e tinha que rodar o seguinte snippet de código lá:
 ```
 goEdit();
