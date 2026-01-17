@@ -286,6 +286,25 @@ canvas.screen{
 	z-index: 3;
 }
 
+.item-list{
+	width: 10rem;
+	height: 20rem;
+	overflow: auto;
+}
+
+.item-list .list{
+	padding: 1em;
+	border-radius: 1em;
+	z-index: 5;
+	background: #000;
+}
+
+.item-list * *{
+	background: var(--button-bg);
+	width: 100%;
+	padding: 1em;
+}
+
 .camadas{
 	width: 20em;
 	background: #0008;

@@ -12,7 +12,6 @@ const Elements = {
 	selectInput: document.querySelector(".initialType"),
 	imageInput: document.querySelector(".input__image_tilemap"),
 	loadMapInput: document.querySelector(".input__file_loadMap"),
-	itemInput: document.querySelector(".input__image_items"),
 	npcInput: document.querySelector(".input__image_npcs"),
 	tamanhoInput: document.querySelector(".input__tileSize"),
 	larguraInput: document.querySelectorAll(".input__mapSize")[0],
@@ -26,6 +25,7 @@ const Elements = {
 	itemChecker: document.querySelector(".input__placeableItems"),
 	npcChecker: document.querySelector(".input__placeableNPCs")
 }
+
 
 class Layer {
 	constructor(tipo, largura, altura){
@@ -76,13 +76,19 @@ class Layer {
 			this.layerFront.classList.toggle("selected");
 			this.canvas.addEventListener("click", putPiece);
 			this.canvas.addEventListener("touchmove", putPieceTouchMove);
+			
 			You.selectedLayer = this.id;
 			if(this.tipo == "ground"){
 				Elements.canvasPreset__delimiter.classList.add("hidden");
 				Elements.relevoMode.classList.toggle("hidden");
 				Elements.imageInput.classList.add("hidden");
+				furnitures.DOM.classList.add('hidden');
+			} else if(this.tipo == "items"){
+				Elements.canvasPreset__delimiter.classList.add("hidden");
+				furnitures.DOM.classList.remove('hidden');
 			} else{
 				Elements.canvasPreset__delimiter.classList.remove("hidden");
+				furnitures.DOM.classList.add('hidden');
 				Elements.relevoMode.classList.add("hidden");
 				Elements.imageInput.classList.remove("hidden");
 			}
@@ -127,6 +133,7 @@ const ToolBar ={
 	verTiles: Elements.toolbar.querySelectorAll(".old-btns")[0],
 	isTilesPresent: false,
 	verCamadas: Elements.toolbar.querySelector("#btn-layers"),
+	verItens: Elements.toolbar.querySelector('#btn-items')
 }
 
 const UIbuttons = {
@@ -186,30 +193,24 @@ function saveNPCimage(e){
 	leitor.readAsDataURL(file);
 }
 
-function saveItemImage(e){
-	const arq = e.target.files[0];
-	const leitor = new FileReader();
-	leitor.onload = function(e){
-		objectImage.items = new Image();
-		objectImage.items.src = e.target.result;
-	}
-	leitor.readAsDataURL(file);
-}
-
-
 
 function loadMap(e){
 	const arq = e.target.files[0];
 	const leitor = new FileReader();
-	leitor.onload = function(e){
-		Map = JSON.parse(e.target.result);
+	leitor.onload = function(ev){
+		Map = JSON.parse(ev.target.result);
+		Elements.larguraInput.value = Map.width;
+		Elements.alturaInput.value = Map.height;
+		Elements.mapName.value = Map.name;
 	}
-	leitor.readAsDataURL(file);
+	leitor.readAsText(arq);
 }
 
 const You = {
 	selectedPieceId: undefined,
-	selectedLayer: 0
+	selectedLayer: 0,
+	threeDimensionalGround: true,
+	furnitureSelectedId: 0
 }
 
 let Map = undefined;
@@ -233,7 +234,6 @@ function events(){
 	Elements.itemChecker.addEventListener("click", ()=>{
 		Elements.itemChecker.value = (Elements.itemChecker.value == "true")? "false": "true";
 		Elements.itemChecker.classList.toggle("active");
-		Elements.itemInput.classList.toggle("hidden");
 	});
 	Elements.imageInput.addEventListener("change", handleTileSet);
 	UIbuttons.aplicar.addEventListener("click", aplicar);
@@ -258,9 +258,13 @@ function events(){
 		Elements.exitLayerMode.classList.add("hidden");
 	});
 	UIbuttons.salvar.addEventListener("click", salvarMapa);
+	ToolBar.verItens.addEventListener("click", ()=>{
+		furnitures.DOM.classList.toggle('hidden');
+	});
+	
 	ElementosCamadas.adicionar.addEventListener("click", addObjectLayer);
 	//ElementosCamadas.deletar.addEventListener("click", removeLayer);
-	FurniturePositioning.events();
+	furnitures.init();
 }
 
 function putPiece(event){
@@ -288,8 +292,17 @@ function putPiece(event){
 			context.rect(gridCanvasCoords.x , gridCanvasCoords.y, tileSize, tileSize);
 			context.stroke();
 			context.fillText(You.selectedPieceId, gridCanvasCoords.x + tileSize*0.5, gridCanvasCoords.y + tileSize*0.5);
-		}else if(Elements.canvases[You.selectedLayer].tipo == "items"){
 			
+			if(You.threeDimensionalGround){
+				context.clearRect(0, 0, Elements.canvases[You.selectedLayer].canvas.width, Elements.canvases[You.selectedLayer].canvas.height);
+				DRAW__Grid("ground", context, Map.grids.ground, tileSize, tiles, tileSize, true);
+				
+			}
+		} else if(Elements.canvases[You.selectedLayer].tipo == "items"){
+			context.clearRect(0, 0, Elements.canvases[You.selectedLayer].canvas.width, Elements.canvases[You.selectedLayer].canvas.height);
+			DRAW__Grid("items", context, Map.grids.items, tileSize, tiles);
+			Map.grids["items"][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.furnitureSelectedId;
+			return;
 		} else{
 			context.drawImage(tiles,
 				You.selectedPieceId * tileSize % tiles.width,
@@ -301,11 +314,11 @@ function putPiece(event){
 				tileSize, tileSize
 			);
 		}
+		standardGridLength = MapGridsProps.length;
 		if(You.selectedLayer < standardGridLength){
 			Map.grids[MapGridsProps[You.selectedLayer]][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
-			
 		}else{
-			Map.grids.objects[You.selectedLayer-2][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
+			Map.grids.objects[You.selectedLayer-standardGridLength][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
 		}
 	} catch (error) {
 		alert("grid não declarada");
@@ -313,57 +326,11 @@ function putPiece(event){
 	}
 }
 
-function putPieceTouchMove(ev){
-	ev.preventDefault();
-	let event = ev.touches[0];
-	let context = Elements.canvases[You.selectedLayer].canvas.ctx;
-	try{
-		let tileSize = Number(Elements.tamanhoInput.value)
-		let client_width = Math.floor(Elements.canvases[You.selectedLayer].canvas.clientWidth);
-		let client_height = Math.floor(Elements.canvases[You.selectedLayer].canvas.clientHeight);
-		let aspectRatio = Elements.canvases[You.selectedLayer].canvas.width/client_width;
-		let aspectRatioHeight = Elements.canvases[You.selectedLayer].canvas.height/client_height;
-		let boundingRect = Elements.canvases[You.selectedLayer].canvas.getBoundingClientRect();
-		let canvasX = (event.clientX - boundingRect.left)*aspectRatio;
-		let canvasY = (event.clientY - boundingRect.top)*aspectRatioHeight;
-		
-		
-		let gridCanvasCoords = {
-			x: GridToWorld(WorldToGrid(canvasX, tileSize), tileSize),
-			y: GridToWorld(WorldToGrid(canvasY, tileSize), tileSize)
-		}
-		context.clearRect(gridCanvasCoords.x, gridCanvasCoords.y, tileSize, tileSize);
-		if(Elements.canvases[You.selectedLayer].tipo == "ground"){
-			You.selectedPieceId = Number(RelevoButtons.input.value);
-			context.beginPath();
-			context.strokeStyle = "#f9bc60";
-			context.rect(gridCanvasCoords.x , gridCanvasCoords.y, tileSize, tileSize);
-			context.stroke();
-			context.fillText(You.selectedPieceId, gridCanvasCoords.x + tileSize*0.5, gridCanvasCoords.y + tileSize*0.5);
-		}else if(Elements.canvases[You.selectedLayer].tipo == "items"){
-			
-		} else{
-			context.drawImage(tiles,
-				You.selectedPieceId * tileSize % tiles.width,
-				Number.parseInt(
-					You.selectedPieceId/WorldToGrid(tiles.width, tileSize)
-				)*tileSize,
-				tileSize, tileSize, 
-				gridCanvasCoords.x, gridCanvasCoords.y,
-				tileSize, tileSize
-			);
-		}
-		if(You.selectedLayer < standardGridLength){
-			Map.grids[MapGridsProps[You.selectedLayer]][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
-			
-		}else{
-			Map.grids.objects[You.selectedLayer-2][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
-		}
-	} catch (error) {
-		alert("grid não declarada");
-		console.log(error);
-	}
+function putPieceTouchMove(event){
+	event.preventDefault();
+	putPiece(event.touches[0]);
 }
+
 
 function choosePiece(event){
 	let context = Elements.canvasPreset.ctx;
@@ -404,13 +371,35 @@ function aplicarComMapaDefinido(){
 	Elements.canvasPreset.height = tiles.height;
 	Elements.canvasPreset.ctx.drawImage(tiles, 0, 0, tiles.width, tiles.height);
 	let tileSize = Number(Elements.tamanhoInput.value);
+	if(Elements.itemChecker.value == "true"){
+		MapGridsProps.push("items");
+	}
 	for(let i = 0; i < MapGridsProps.length; i++){
 		addLayerAs(MapGridsProps[i]);
-		Map.grids[MapGridsProps[i]] = createMatrixWithSomething(Map.width, Map.height, 0);
 	} 
 	if(Map.grids.enemies){
 		hasEnemies = true;
 	}
+	if(Map.grids.objects.length > 0){
+		for(let i = 0; i < Map.grids.objects.length; i++){
+			addLayerAs('objects');
+			if(Map.grids.objects[i].length <= 0){
+				Map.grids.objects[i] = createMatrixWithSomething(Map.width, Map.height, -1);
+			}
+		}
+	}
+	standardGridLength = MapGridsProps.length;
+	for(let i = 0; i < Elements.canvases.length; i++){
+		Elements.canvases[i].canvas.width = Map.width*tileSize;
+		Elements.canvases[i].canvas.height = Map.height*tileSize;
+		
+		if(Elements.canvases[i].tipo == 'objects'){
+			DRAW__Grid(Elements.canvases[i].tipo, Elements.canvases[i].canvas.ctx, Map.grids['objects'][i-MapGridsProps.length], tileSize, tiles);
+			continue;
+		}
+		DRAW__Grid(Elements.canvases[i].tipo, Elements.canvases[i].canvas.ctx, Map.grids[Elements.canvases[i].tipo], tileSize, tiles);
+	}
+	
 	// por razões [i][j]++ irão acontecer problemas de camadas, então vamos resetar as sombras e calculá-las quando o usuario apertar em baixar.
 	Map.grids["shadow"] = createMatrixWithSomething(Map.width, Map.height, 0);
 }
@@ -418,11 +407,13 @@ function aplicarComMapaDefinido(){
 function aplicar(){
 	if(Map){
 		aplicarComMapaDefinido();
+		return;
 	}
 	Map = {
 		width: Number(Elements.larguraInput.value),
 		height: Number(Elements.alturaInput.value),
-		grids: {}
+		grids: {},
+		name: Elements.mapName.value
 	}
 	Elements.mapInfoMenu.classList.add("hidden")
 	Elements.main.classList.remove("hidden");

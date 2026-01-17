@@ -1,115 +1,112 @@
-const moveisUI = document.querySelector(".define-furnitures");
-
-const ObjVariables = {
-	global: {
-		w: 0,
-		h: 0,
+const furnitures = {
+	image: new Image(),
+	list: [
+		{
+			name: "washing machine",
+			dimen: {w: 48, h: 48, p: 48},
+			id: 0
+		},
+		{
+			name: "sink",
+			dimen: {w: 48, h: 48, p: 48},
+			id: 1
+		},
+		{
+			name: "micro pantry",
+			dimen: {w: 48, h: 48, p: 48},
+			id: 2
+		},
+		{
+			name: "stove",
+			dimen: {w: 48, h: 48, p: 48},
+			id: 3
+		},
+		{
+			name: "double stove",
+			dimen: {w: 96, h: 48, p: 48},
+			id: 4
+		},
+		{
+			name: "chair",
+			dimen: {w: 48, h: 48, p: 48},
+			id: 6
+		},
+		{
+			name: "chair looking west",
+			dimen: {w: 48, h: 48, p: 48},
+			id: 7
+		},
+		{
+			name: "table",
+			dimen: {w: 96, h: 48, p: 48},
+			id: 10
+		},
+		{
+			name: "small table",
+			dimen: {w: 48, h: 48, p: 48},
+			id: 12
+		},
+		{
+			name: "vase 1",
+			dimen: {w: 48, h: 48, p: 48},
+			id: 13
+		},
+		{
+			name: "vase 2",
+			dimen: {w: 48, h: 48, p: 48},
+			id: 14
+		},
+		{
+			name: "vase 3",
+			dimen: {w: 48, h: 48, p: 48},
+			id: 15
+		},
+		{
+			name: "bed",
+			dimen: {w: 96, h: 96, p: 144},
+			id: 16
+		},
+		{
+			name: "tree",
+			dimen: {w: 144, h: 144, p: 96},
+			id: 40
+		},
+	],
+	findId(wantedId){
+		for(let i = 0; i< this.list.length; i++){
+			if(this.list[i].id == wantedId){
+				return this.list[i].dimen;
+			}
+		}
+		return null;
 	},
-	local: {
-		w: 0,
-		h: 0,
+	DOM: document.querySelector('.item-list'),
+	element: null,
+	init(){
+		this.image.src = "src/imgs/furnitures.png";
+		//great, it's now a level editor... anyway, I'm gonna work on that later, but... for now...
+		//put that on the element
+		
+		this.element = document.createElement("section");
+		this.element.classList.add("list");
+		this.element.classList.add("flex-column");
+		this.element.classList.add("scrollable");
+		
+		for(let i = 0; i < this.list.length; i++){
+			let listItem = document.createElement("div");
+			listItem.innerHTML = this.list[i].name;
+			listItem.classList.add("items");
+			listItem.addEventListener("click", ()=>{
+				
+				You.furnitureSelectedId = this.list[i].id;
+				this.DOM.classList.add('hidden');
+			});
+			this.element.appendChild(listItem);
+		}
+		this.DOM.appendChild(this.element);
+		
+	},
+	add(you, x, y){
+		Map.items[y][x] = you.furnitureSelectedId;
 	}
 }
-
-const FurniturePositioning = {
-	canvas: moveisUI.querySelector("#canvas-furniture"),
-	ctx: null,
-	inputWidth: moveisUI.querySelector(".furniture-min-width"),
-	inputHeight: moveisUI.querySelector(".furniture-min-height"),
-	btnRec: moveisUI.querySelector(".recalibrar"),
-	input_currentFurnitureWidth: moveisUI.querySelector(".current-furniture-width"),
-	input_currentFurnitureHeight: moveisUI.querySelector(".current-furniture-height"),
-	adicionarMovel: moveisUI.querySelector(".add-furn"),
-	image: null,
-	you: {x: 0, y: 0, w: 0, h: 0},
-	//fora do container
-	toggler: document.querySelector(".input__placeableFurniture"),
-	imgInput: document.querySelector(".input__image_furniture"),
-	preMenu: document.querySelector(".structure-pre-menu"),
-	launchImg: document.querySelector(".launch-img"),
-	clear(){
-		this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
-	},
-	startCanvas(){
-		this.ctx = this.canvas.getContext("2d");
-	},
-	draw(){
-		this.canvas.width = this.img.width;
-		this.canvas.height = this.img.height;
-		this.ctx.drawImage(this.img, 0, 0, this.canvas.width, this.canvas.height);
-	},
-	saveImg(e){
-		const arq = e.target.files[0];
-		const leitor = new FileReader();
-		leitor.onload = function(e){
-			FurniturePositioning.img = new Image();
-			FurniturePositioning.img.src = e.target.result;
-		}
-		leitor.readAsDataURL(arq);
-	},
-	addGuideLine(context){
-		context.beginPath();
-		context.strokeStyle = "#f9bc60";
-		context.rect(this.you.x , this.you.y, this.you.w, this.you.h);
-		context.stroke();
-	},
-	selectPiece(event){
-		this.you.w = ObjVariables.local.w
-		this.you.h = ObjVariables.local.h
-		let client_width = Math.floor(this.canvas.clientWidth);
-		let client_height = Math.floor(this.canvas.clientHeight);
-		let aspectRatio = this.canvas.width/client_width;
-		let aspectRatioHeight = this.canvas.height/client_height;
-		let boundingRect = this.canvas.getBoundingClientRect();
-		const canvasX = (event.clientX - boundingRect.left)*aspectRatio;
-		const canvasY = (event.clientY - boundingRect.top)*aspectRatioHeight;
-		
-		this.you.x = GridToWorld(WorldToGrid(canvasX, tileSize), tileSize),
-		this.you.y = GridToWorld(WorldToGrid(canvasY, tileSize), tileSize)
-		
-		this.clear();
-		this.draw();
-		this.addGuideline(this.ctx);
-	},
-	inputChange: {
-		w(){
-			ObjVariables.global.w = Number(FurniturePositioning.inputWidth.value);
-		},
-		h(){
-			ObjVariables.global.h = Number(FurniturePositioning.inputWidth.value);
-		}
-	},
-	currentInputChange: {
-		w(){
-			ObjVariables.local.w = Number(FurniturePositioning.inputWidth.value);
-		},
-		h(){
-			ObjVariables.local.h = Number(FurniturePositioning.inputWidth.value);
-		}
-	},
-	recalibrar(){
-		ObjVariables.global.h = ObjVariables.global.w;
-		ObjVariables.local.w = ObjVariables.global.w;
-		ObjVariables.local.h = ObjVariables.global.w;
-	},
-	events(){
-		this.startCanvas();
-		this.canvas.addEventListener("click", this.selectPiece);
-		this.inputWidth.addEventListener("change", this.inputChange["w"]);
-		this.inputHeight.addEventListener("change", this.inputChange["h"]);
-		this.btnRec.addEventListener('click', this.recalibrar);
-		this.input_currentFurnitureWidth.addEventListener("change", this.currentInputChange["w"]);
-		this.input_currentFurnitureHeight.addEventListener("change", this.currentInputChange["h"]);
-		this.adicionarMovel.addEventListener("click", this.createMovel);
-		this.toggler.addEventListener("click", ()=>{
-			this.toggler.value = (this.toggler.value == "true")? "false": "true";
-			this.toggler.classList.toggle("active");
-			this.preMenu.classList.toggle("hidden");
-		});
-		this.imgInput.addEventListener("change", this.saveImg);
-		this.launchImg.addEventListener("click", ()=>{
-			moveisUI.classList.remove("hidden");
-			this.draw();
-		});
-	},
-};
