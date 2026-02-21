@@ -6,7 +6,7 @@ const Elements = {
 	mapInfoMenu: document.querySelector(".mapInfo-menu"),
 	mapName: document.querySelector(".input__mapName"),
 	main: document.querySelector("main"),
-	canvases: [],
+	canvas: document.createElement("canvas"),
 	canvasPreset: document.querySelector("#canvasTilePreset"),
 	canvasPreset__delimiter: document.querySelector(".preset-limiter"),
 	selectInput: document.querySelector(".initialType"),
@@ -28,17 +28,9 @@ const Elements = {
 
 
 class Layer {
-	constructor(tipo, largura, altura){
+	constructor(tipo){
 		this.id = stottic++;
 		this.tipo = tipo;
-		this.canvas = document.createElement("canvas");
-		this.canvas.classList.add("screen");
-		this.canvas.classList.add("absolute");
-		this.canvas.classList.add("top");
-		this.canvas.classList.add("left");
-		this.canvas.ctx = this.canvas.getContext("2d");
-		this.canvas.width = largura;
-		this.canvas.height = largura;
 		this.layerFront = document.createElement("div");
 		this.layerFront.classList.add("layer");
 		this.layerFront.style.color = "var(--button-bg)"
@@ -55,29 +47,21 @@ class Layer {
 		this.layerFront.appendChild(this.layerFrontComponents.hideButton);
 		this.layerFront.appendChild(this.layerFrontComponents.layerName);
 		this.layerFront.appendChild(this.layerFrontComponents.type);
-		
+		this.isHidden = false;
 	}
 	events(){
 		this.layerFrontComponents.hideButton.addEventListener("click", ()=>{
 			this.isHidden = !this.isHidden;
+			canvasUpdate();
 			if(this.isHidden){
-				this.layerFrontComponents.hideButton.innerHTML = "<i class = 'fa-solid fa-smile'></i>"
+				this.layerFrontComponents.hideButton.innerHTML = "<i class = 'fa-solid fa-glasses'></i>"
 			} else {
 				this.layerFrontComponents.hideButton.innerHTML = "<i class = 'fa-solid fa-eye'></i>"
 			}
-			this.canvas.classList.toggle("hidden");
 		});
 		this.layerFront.addEventListener("click", () => {
-			for(let i = 0; i < Elements.canvases.length; i++){
-				Elements.canvases[i].layerFront.classList.remove("selected");
-				Elements.canvases[i].canvas.removeEventListener("click", putPiece);
-				Elements.canvases[i].canvas.removeEventListener("touchmove", putPieceTouchMove);
-			}
-			this.layerFront.classList.toggle("selected");
-			this.canvas.addEventListener("click", putPiece);
-			this.canvas.addEventListener("touchmove", putPieceTouchMove);
-			
 			You.selectedLayer = this.id;
+			
 			if(this.tipo == "ground"){
 				Elements.canvasPreset__delimiter.classList.add("hidden");
 				Elements.relevoMode.classList.toggle("hidden");
@@ -93,33 +77,45 @@ class Layer {
 				Elements.imageInput.classList.remove("hidden");
 			}
 		});
-		this.canvas.addEventListener("click", putPiece);
 	}
 }
 
 let selectedLayer = 0;
+const Layers = []
 
 function addLayer(){
-	Elements.canvases.push(new Layer("floor"));
-	Elements.multiCanvas.appendChild(Elements.canvases[Elements.canvases.length-1].canvas);
-	Elements.layerFront.appendChild(Elements.canvases[Elements.canvases.length-1].layerFront);
+	Layers.push(new Layer("floor"));
+	Elements.layerFront.appendChild(Layers[Layers.length-1].layerFront);
 }
 
 function addLayerAs(type){
-	Elements.canvases.push(new Layer(type));
-	Elements.multiCanvas.appendChild(Elements.canvases[Elements.canvases.length-1].canvas);
-	Elements.layerFront.appendChild(Elements.canvases[Elements.canvases.length-1].layerFront);
+	Layers.push(new Layer(type));
+	Elements.layerFront.appendChild(Layers[Layers.length-1].layerFront);
 }
 
 function addObjectLayer(){
-	Elements.canvases.push(new Layer("objects"));
-	Elements.multiCanvas.appendChild(Elements.canvases[Elements.canvases.length-1].canvas);
-	Elements.layerFront.appendChild(Elements.canvases[Elements.canvases.length-1].layerFront);
+	Layers.push(new Layer("objects"));
+	Elements.layerFront.appendChild(Layers[Layers.length-1].layerFront);
 	Map.grids.objects.push(createMatrixWithSomething(Map.width, Map.height, -1));
 	let tileSize = Number(Elements.tamanhoInput.value)
-	Elements.canvases[Elements.canvases.length-1].canvas.width = Map.width*tileSize;
-	Elements.canvases[Elements.canvases.length-1].canvas.height = Map.height*tileSize;
-	DRAW__Grid(Elements.canvases[Elements.canvases.length-1].tipo, Elements.canvases[Elements.canvases.length-1].canvas.ctx, Map.grids.objects[Map.grids.objects.length-1], tileSize, tiles);
+	canvasUpdate();
+}
+
+//funcao pra dar update no canvas. redesenhando o mapa do zero
+function canvasUpdate(){
+	let tileSize = Number(Elements.tamanhoInput.value)
+	Elements.canvas.ctx.clearRect(0, 0, Elements.canvas.width, Elements.canvas.height)
+	const objectLayers = Layers.filter(index => index.tipo == "objects");
+	const normalLayers = Layers.filter(index => index.tipo != "objects");
+	for(let i = 0; i < normalLayers.length; i++){
+		if(!normalLayers[i].isHidden)
+			DRAW__Grid(normalLayers[i].tipo, Elements.canvas.ctx, Map.grids[normalLayers[i].tipo], tileSize, tiles)
+	}
+	
+	for(let i = 0; i < Map.grids.objects.length; i++){
+		if(!objectLayers[i].isHidden)
+			DRAW__Grid(objectLayers[i].tipo, Elements.canvas.ctx, Map.grids[objectLayers[i].tipo][i], tileSize, tiles);
+	}
 }
 
 const RelevoButtons = {
@@ -268,14 +264,14 @@ function events(){
 }
 
 function putPiece(event){
-	let context = Elements.canvases[You.selectedLayer].canvas.ctx;
+	let context = Elements.canvas.ctx;
 	try{
 		let tileSize = Number(Elements.tamanhoInput.value)
-		let client_width = Math.floor(Elements.canvases[You.selectedLayer].canvas.clientWidth);
-		let client_height = Math.floor(Elements.canvases[You.selectedLayer].canvas.clientHeight);
-		let aspectRatio = Elements.canvases[You.selectedLayer].canvas.width/client_width;
-		let aspectRatioHeight = Elements.canvases[You.selectedLayer].canvas.height/client_height;
-		let boundingRect = Elements.canvases[You.selectedLayer].canvas.getBoundingClientRect();
+		let client_width = Math.floor(Elements.canvas.clientWidth);
+		let client_height = Math.floor(Elements.canvas.clientHeight);
+		let aspectRatio = Elements.canvas.width/client_width;
+		let aspectRatioHeight = Elements.canvas.height/client_height;
+		let boundingRect = Elements.canvas.getBoundingClientRect();
 		let canvasX = (event.clientX - boundingRect.left)*aspectRatio;
 		let canvasY = (event.clientY - boundingRect.top)*aspectRatioHeight;
 		
@@ -284,35 +280,12 @@ function putPiece(event){
 			x: GridToWorld(WorldToGrid(canvasX, tileSize), tileSize),
 			y: GridToWorld(WorldToGrid(canvasY, tileSize), tileSize)
 		}
-		context.clearRect(gridCanvasCoords.x, gridCanvasCoords.y, tileSize, tileSize);
-		if(Elements.canvases[You.selectedLayer].tipo == "ground"){
+		if(Layers[You.selectedLayer].tipo == "ground"){
 			You.selectedPieceId = Number(RelevoButtons.input.value);
-			context.beginPath();
-			context.strokeStyle = "#f9bc60";
-			context.rect(gridCanvasCoords.x , gridCanvasCoords.y, tileSize, tileSize);
-			context.stroke();
-			context.fillText(You.selectedPieceId, gridCanvasCoords.x + tileSize*0.5, gridCanvasCoords.y + tileSize*0.5);
-			
-			if(You.threeDimensionalGround){
-				context.clearRect(0, 0, Elements.canvases[You.selectedLayer].canvas.width, Elements.canvases[You.selectedLayer].canvas.height);
-				DRAW__Grid("ground", context, Map.grids.ground, tileSize, tiles, tileSize, true);
-				
-			}
-		} else if(Elements.canvases[You.selectedLayer].tipo == "items"){
-			context.clearRect(0, 0, Elements.canvases[You.selectedLayer].canvas.width, Elements.canvases[You.selectedLayer].canvas.height);
-			DRAW__Grid("items", context, Map.grids.items, tileSize, tiles);
+		} else if(Layers[You.selectedLayer].tipo == "items"){
 			Map.grids["items"][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.furnitureSelectedId;
+			canvasUpdate();
 			return;
-		} else{
-			context.drawImage(tiles,
-				You.selectedPieceId * tileSize % tiles.width,
-				Number.parseInt(
-					You.selectedPieceId/WorldToGrid(tiles.width, tileSize)
-				)*tileSize,
-				tileSize, tileSize, 
-				gridCanvasCoords.x, gridCanvasCoords.y,
-				tileSize, tileSize
-			);
 		}
 		standardGridLength = MapGridsProps.length;
 		if(You.selectedLayer < standardGridLength){
@@ -320,8 +293,10 @@ function putPiece(event){
 		}else{
 			Map.grids.objects[You.selectedLayer-standardGridLength][WorldToGrid(canvasY, tileSize)][WorldToGrid(canvasX, tileSize)] = You.selectedPieceId;
 		}
+		canvasUpdate();
 	} catch (error) {
 		alert("grid não declarada");
+		canvasUpdate();
 		console.log(error);
 	}
 }
@@ -370,7 +345,10 @@ function aplicarComMapaDefinido(){
 	Elements.canvasPreset.width = tiles.width;
 	Elements.canvasPreset.height = tiles.height;
 	Elements.canvasPreset.ctx.drawImage(tiles, 0, 0, tiles.width, tiles.height);
+	Elements.multiCanvas.appendChild(Elements.canvas);
 	let tileSize = Number(Elements.tamanhoInput.value);
+	Elements.canvas.width = Map.width*tileSize;
+	Elements.canvas.height = Map.height*tileSize;
 	if(Elements.itemChecker.value == "true"){
 		MapGridsProps.push("items");
 	}
@@ -389,26 +367,26 @@ function aplicarComMapaDefinido(){
 		}
 	}
 	standardGridLength = MapGridsProps.length;
-	for(let i = 0; i < Elements.canvases.length; i++){
-		Elements.canvases[i].canvas.width = Map.width*tileSize;
-		Elements.canvases[i].canvas.height = Map.height*tileSize;
-		
-		if(Elements.canvases[i].tipo == 'objects'){
-			DRAW__Grid(Elements.canvases[i].tipo, Elements.canvases[i].canvas.ctx, Map.grids['objects'][i-MapGridsProps.length], tileSize, tiles);
-			continue;
-		}
-		DRAW__Grid(Elements.canvases[i].tipo, Elements.canvases[i].canvas.ctx, Map.grids[Elements.canvases[i].tipo], tileSize, tiles);
-	}
+	
+	canvasUpdate();
 	
 	// por razões [i][j]++ irão acontecer problemas de camadas, então vamos resetar as sombras e calculá-las quando o usuario apertar em baixar.
 	Map.grids["shadow"] = createMatrixWithSomething(Map.width, Map.height, 0);
 }
 
 function aplicar(){
+	Elements.canvas.classList.add("screen");
+	Elements.canvas.classList.add("absolute");
+	Elements.canvas.classList.add("top");
+	Elements.canvas.classList.add("left");
+	Elements.canvas.ctx = Elements.canvas.getContext("2d");
+	Elements.canvas.addEventListener("click", putPiece);
+	Elements.canvas.addEventListener("touchmove", putPieceTouchMove);
 	if(Map){
 		aplicarComMapaDefinido();
 		return;
 	}
+	Elements.multiCanvas.appendChild(Elements.canvas);
 	Map = {
 		width: Number(Elements.larguraInput.value),
 		height: Number(Elements.alturaInput.value),
@@ -420,6 +398,7 @@ function aplicar(){
 	Elements.canvasPreset.width = tiles.width;
 	Elements.canvasPreset.height = tiles.height;
 	Elements.canvasPreset.ctx.drawImage(tiles, 0, 0, tiles.width, tiles.height);
+	
 	let tileSize = Number(Elements.tamanhoInput.value);
 	if(Elements.itemChecker.value == "true"){
 		MapGridsProps.push("items");
@@ -439,10 +418,11 @@ function aplicar(){
 	}
 	Map.grids["objects"] = [];
 	Map.grids["shadow"] = createMatrixWithSomething(Map.width, Map.height, 0);
-	for(let i = 0; i < Elements.canvases.length; i++){
-		Elements.canvases[i].canvas.width = Map.width*tileSize;
-		Elements.canvases[i].canvas.height = Map.height*tileSize;
-		DRAW__Grid(Elements.canvases[i].tipo, Elements.canvases[i].canvas.ctx, Map.grids[MapGridsProps[selectedId]], tileSize, tiles);
+	Elements.canvas.width = Map.width*tileSize;
+	Elements.canvas.height = Map.height*tileSize;
+	for(let i = 0; i < Layers.length; i++){
+		if(!Layers[i].isHidden)
+			DRAW__Grid(Layers[i].tipo, Elements.canvas.ctx, Map.grids[Layers[i].tipo], tileSize, tiles)
 	}
 }
 
