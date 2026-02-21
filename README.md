@@ -65,8 +65,9 @@ versão 1.5
 
 - Eu consegui me podar mais contra os event listeners. Aparentemente eu masterei os controles de toque (eu não exatamente masterei eles, mas agora não existe mais a disparidade antiga de você tocar e o toque registrar em uma coordenada longe
 - Assim eu tenho a versão 1.5. Em que eu expandi para um horizonte mais interativo. O usuario agora poderá criar os próprios mapas do zero sem precisar colocar imagens. Alêm disso, houve o desenvolvimento de um algoritmo para automatizar o calculo do tileset de sombra (porém ainda não 100% testado) ele se baseia em pegar uma grid originalmente com só zeros e quando detectada uma elevação na tile de relevo ela aumenta a layer da coluna, fazendo com que a drawing order fique automatizada.
-- novas layers foram emplementadas agora possuindo layers de objetos
-- Em breve trabalharei na versão 1.6. que trará a possibilidade de implementar novas imagens de tilesets que poderão ser implementadas com tamanhos diferentes. Além disso, após os devidos testes o algoritmo de calculo de sobras será implementado no 2Image2Tile. o que trará uma nova camada de automação para o projeto
+- as camadas são agora renderizadas em um só canvas. isso por incrível que pareça aumentou a performance e agora o usuário poderá desenhar tiles na camada selecionada sem se preocupar com a camada estar visivel em cima. coisa que os multiplos canvas não permitiam, além disso, o bug de do nada o usuário não poder usar a camada selecionada foi abolido!
+- novas layers foram emplementadas, agora possuindo possibilidade para adicionar layers de itens e objetos.
+- Em breve trabalharei na versão 1.6. Que trará a possibilidade de dar zoom e rotacionar o mapa, garantindo uma construção mais dinâmica.
 
 Conclusão
 -
