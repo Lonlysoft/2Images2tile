@@ -28,7 +28,7 @@ Já na época do magical sewer eu percebi que não era muito legal escrever e di
 - cores tinham que ser colocadas manualmente em um ```if...else``` bastante longo e isso não era nem um pouco automatizando.
 - A matriz resultante era uma matriz de strings que tinham informações de tudo do jogo. Isso dava limitações de quão alto as colisões poderiam ser.
 - A forma de executar o programa também não era pra das melhores. você teria que ter acesso ao console e tinha que rodar o seguinte snippet de código lá:
-```
+``` javascript
 goEdit();
 for(let i = 0; i < 80; i++){
 	document.write("["+level[i]+"], ");
