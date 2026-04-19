@@ -26,8 +26,8 @@ function DRAW__Grid(type, context, grid2Draw, tileSize, gridImage, tileImageSize
 					continue;
 				}
 				let currentItem = furnitures.findId(grid2Draw[i][j])
-				let frameX = grid2Draw[i][j]*tileImageSize % furnitures.image.width;
-				let frameY = Number.parseInt(grid2Draw[i][j]/WorldToGrid(furnitures.image.width, tileSize))* tileSize;
+				let frameX = 0;
+				let frameY = grid2Draw[i][j]*tileImageSize;
 				let width = currentItem.w
 				let height = currentItem.h
 				let depth = currentItem.p

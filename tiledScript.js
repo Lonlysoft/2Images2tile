@@ -20,7 +20,7 @@ const Elements = {
 	toolbar: document.querySelector(".tool-bar"),
 	layerFront: document.querySelector(".camadas"),
 	exitLayerMode: document.querySelector(".exitLayerMode"),
-	hasWaterInput: document.querySelector(".input__hasWater"),
+	chunkedMap: document.querySelector(".input__isChunkedWorld"),
 	enemyChecker: document.querySelector(".input__hasEnemy"),
 	itemChecker: document.querySelector(".input__placeableItems"),
 	npcChecker: document.querySelector(".input__placeableNPCs")
@@ -219,9 +219,9 @@ function events(){
 		loadMap(e);
 		let tileSize = Number(Elements.tamanhoInput.value);
 	});
-	Elements.hasWaterInput.addEventListener("click", ()=>{
-		Elements.hasWaterInput.value = (Elements.hasWaterInput.value == "true")? "false": "true";
-		Elements.hasWaterInput.classList.toggle("active");
+	Elements.chunkedMap.addEventListener("click", ()=>{
+		Elements.chunkedMap.value = (Elements.chunkedMap.value == "true")? "false": "true";
+		Elements.chunkedMap.classList.toggle("active");
 	});
 	Elements.enemyChecker.addEventListener("click", ()=>{
 		Elements.enemyChecker.value = (Elements.enemyChecker.value == "true")? "false": "true";
@@ -260,6 +260,13 @@ function events(){
 	
 	ElementosCamadas.adicionar.addEventListener("click", addObjectLayer);
 	//ElementosCamadas.deletar.addEventListener("click", removeLayer);
+	Elements.multiCanvas.addEventListener("touchmove",event=>{
+		if (event.touches.length === 2) {
+    		const [p1, p2] = event.targetTouches;
+    		const currentDistance = distancia2pontos(p1.clientX, p1.clientY, p2.clientX, p2.clientY);
+    		
+		}
+	});
 	furnitures.init();
 }
 
@@ -295,9 +302,9 @@ function putPiece(event){
 		}
 		canvasUpdate();
 	} catch (error) {
-		alert("grid não declarada");
+		//alert("grid não declarada");
 		canvasUpdate();
-		console.log(error);
+		//console.log(error);
 	}
 }
 
@@ -411,7 +418,7 @@ function aplicar(){
 	Map.grids["beings"] = createMatrixWithSomething(Map.width, Map.height, "");
 	Map.grids["npcs"] = createMatrixWithSomething(Map.width, Map.height, 0);
 	Map.grids["items"] = createMatrixWithSomething(Map.width, Map.height, 0);
-	Map.grids["hasWater"] = (Elements.hasWaterInput.value == "true")? true : false;
+	Map.grids["hasWater"] = (Elements.chunkedMap.value == "true")? true : false;
 	Map.grids["water"] = (Map.grids["hasWater"])? createMatrixWithSomething(Map.width, Map.height, 0): null;
 	if(hasEnemies){
 		Map.grids["enemies"] = createMatrixWithSomething(Map.width, Map.height, 0);

@@ -3,8 +3,8 @@ const ctx = canvas.getContext("2d");
 const canvas_template = document.getElementById("paleta");
 const ctx_template = canvas_template.getContext("2d");
 
-const coresTemplate = [];
-const TheSystem = {name: "mapa", mapa: []};
+let coresTemplate = [];
+const TheSystem = {name: "mapa", grid: [], mapa: {}};
 
 function obterCorDoPixel(context, x, y) {
 	let pixel = context.getImageData(x, y, 1, 1);
@@ -14,6 +14,8 @@ function obterCorDoPixel(context, x, y) {
 
 function obterCorDeTemplate(temp_imagery){
 	ctx_template.drawImage(temp_imagery, 0, 0);
+	//ao iniciar sempre coloque um array vazio para n ter problema com overflow. podendo usar n vezes.
+	coresTemplate = [];
 	for(let i = 0; i < temp_imagery.width; i+=1){
 		coresTemplate.push(obterCorDoPixel(ctx_template, i, 0));
 	}
@@ -21,7 +23,8 @@ function obterCorDeTemplate(temp_imagery){
 const osInputs = {
 	tipoDeSetup: document.querySelector(".input__image_grid"),
 	asCoresEmOrdem: document.querySelector(".input__image_template"),
-	tileset: document.querySelector(".input__tile")
+	tileset: document.querySelector(".input__tile"),
+	nomeDoMapa: document.querySelector(".input__name")
 };
 osInputs.tipoDeSetup.addEventListener("change", handleImagery);
 osInputs.asCoresEmOrdem.addEventListener("change", handlePallet);
@@ -41,19 +44,19 @@ function WorldToGrid(axis, tileSize){
 	return Math.floor(axis/tileSize);
 }
 
-function drawMap(){
+function drawMap(chunkId){
 	const inputNumber = document.querySelector(".input__tileSize");
 	const TILE_SIZE = Number(inputNumber.value);
 	const mapCanvas = document.querySelector("#mapCanvas");
 	const mapCtx = mapCanvas.getContext("2d");
-	mapCanvas.height = TheSystem.mapa.length * TILE_SIZE;
-	mapCanvas.width = TheSystem.mapa[0].length * TILE_SIZE;
-	for(let i = 0; i < TheSystem.mapa.length; i++){
-		for(let j = 0; j < TheSystem.mapa[i].length; j++){
+	mapCanvas.height = TheSystem.mapa.pieces[chunkId].grids.floor.length * TILE_SIZE;
+	mapCanvas.width = TheSystem.mapa.pieces[chunkId].grids.floor[0].length * TILE_SIZE;
+	for(let i = 0; i < TheSystem.mapa.pieces[chunkId].grids.floor.length; i++){
+		for(let j = 0; j < TheSystem.mapa.pieces[chunkId].grids.floor[i].length; j++){
 			mapCtx.drawImage(tiles,
-				TheSystem.mapa[i][j]*TileSize % imagemSdw_width,
+				TheSystem.mapa.pieces[chunkId].grids.floor[i][j]*TileSize % imagemSdw_width,
 				Number.parseInt(
-					TheSystem.mapa[i][j]/WorldToGrid(imagemSdw_width, TileSize)
+					TheSystem.mapa.pieces[chunkId].grids.floor[i][j]/WorldToGrid(imagemSdw_width, TileSize)
 				) * TileSize,
 				TileSize, TileSize,
 				j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE
@@ -67,14 +70,16 @@ function drawMap(){
 function general(imagemSdw){
 	let corDoPixel = []
 	ctx.drawImage(imagemSdw, 0, 0, imagemSdw.width, imagemSdw.height);
+	TheSystem.grid = [];
 	for(let i = 0; i < imagemSdw.height; i++){
 		corDoPixel.push(new Array());
-		TheSystem.mapa.push(new Array());
+		TheSystem.grid.push(new Array());
 		for(let j = 0; j < imagemSdw.width; j++){
 			corDoPixel[i].push(obterCorDoPixel(ctx, j, i));
-			TheSystem.mapa[i].push(idOf(coresTemplate, corDoPixel[i][j]));
+			TheSystem.grid[i].push(idOf(coresTemplate, corDoPixel[i][j]));
 		}
 	}
+	TheSystem.mapa = transformIntoChunkedMap(TheSystem.grid, "ground");
 }
 
 const TileSize = 48;
@@ -82,19 +87,20 @@ const imagemSdw_width = 192;
 
 function generalForGraphicPurposes(imagemSdw){
 	let corDoPixel = []
+	TheSystem.grid = [];
 	let imageLengthInTileSize = Math.floor(imagemSdw_width/TileSize);
 	ctx.drawImage(imagemSdw, 0, 0, imagemSdw.width, imagemSdw.height);
 	for(let i = 0; i < imagemSdw.height; i++){
-		TheSystem.mapa.push(new Array());
+		TheSystem.grid.push(new Array());
 		corDoPixel.push(new Array());
 		for(let j = 0; j < imagemSdw.width; j++){
 			corDoPixel[i].push(obterCorDoPixel(ctx, j, i));
 			let fret = 16 * idOf(coresTemplate, corDoPixel[i][j]);
-			TheSystem.mapa[i].push(fret+5);
+			TheSystem.grid[i].push(fret+5);
 		}
 	}
-	for(let i = 0; i < TheSystem.mapa.length; i++){
-		for(let j = 0; j < TheSystem.mapa[i].length; j++){
+	for(let i = 0; i < TheSystem.grid.length; i++){
+		for(let j = 0; j < TheSystem.grid[i].length; j++){
 			let flag = [false, false, false, false];
 			if((i > 0 && j > 0) && (i < imagemSdw.height-1 && j < imagemSdw.width-1)){
 				if(corDoPixel[i - 1][j] != corDoPixel[i][j])
@@ -108,52 +114,54 @@ function generalForGraphicPurposes(imagemSdw){
 			}
 			
 			if(flag[0] && flag[1] && flag[2] && flag[3])
-				TheSystem.mapa[i][j] -= imageLengthInTileSize*2+2;
+				TheSystem.grid[i][j] -= imageLengthInTileSize*2+2;
 			
 			else if(flag[0] && flag[1] && flag[2] && !flag[3])
-				TheSystem.mapa[i][j] += imageLengthInTileSize*2 -1;
+				TheSystem.grid[i][j] += imageLengthInTileSize*2 -1;
 			
 			else if(flag[0] && flag[1] && flag[3] && !flag[2])
-				TheSystem.mapa[i][j] += imageLengthInTileSize*2 +1;
+				TheSystem.grid[i][j] += imageLengthInTileSize*2 +1;
 				
 			else if(flag[2] && flag[3] && flag[0] && !flag[1])
-				TheSystem.mapa[i][j] -= imageLengthInTileSize+2;
+				TheSystem.grid[i][j] -= imageLengthInTileSize+2;
 				
 			else if(flag[2] && flag[3] && flag[1] && !flag[0])
-				TheSystem.mapa[i][j] += imageLengthInTileSize+2;
+				TheSystem.grid[i][j] += imageLengthInTileSize+2;
 			
 			else if(flag[0] && flag[1] && !flag[2] && !flag[3])
-				TheSystem.mapa[i][j] += imageLengthInTileSize*2;
+				TheSystem.grid[i][j] += imageLengthInTileSize*2;
 				
 			else if(flag[0] && flag[2] && !flag[1] && !flag[3])
-				TheSystem.mapa[i][j] -= imageLengthInTileSize+1;
+				TheSystem.grid[i][j] -= imageLengthInTileSize+1;
 				
 			else if(flag[0] && flag[3] && !flag[1] && !flag[2])
-				TheSystem.mapa[i][j] -= imageLengthInTileSize-1;
+				TheSystem.grid[i][j] -= imageLengthInTileSize-1;
 				
 			else if(flag[1] && flag[2] && !flag[0] && !flag[3])
-				TheSystem.mapa[i][j] += imageLengthInTileSize-1;
+				TheSystem.grid[i][j] += imageLengthInTileSize-1;
 				
 			else if(flag[1] && flag[3] && !flag[0] && !flag[2])
-				TheSystem.mapa[i][j] += imageLengthInTileSize+1;
+				TheSystem.grid[i][j] += imageLengthInTileSize+1;
 				
 			else if(flag[2] && flag[3] && !flag[1] && !flag[0])
-				TheSystem.mapa[i][j] += 2;
+				TheSystem.grid[i][j] += 2;
 			
 			else if(flag[0] && !flag[1] && !flag[2] && !flag[3])
-				TheSystem.mapa[i][j] -= imageLengthInTileSize;
+				TheSystem.grid[i][j] -= imageLengthInTileSize;
 				
 			else if(flag[1] && !flag[0] && !flag[2] && !flag[3])
-				TheSystem.mapa[i][j] += imageLengthInTileSize;
+				TheSystem.grid[i][j] += imageLengthInTileSize;
 				
 			else if(flag[2] && !flag[0] && !flag[1] && !flag[3])
-				TheSystem.mapa[i][j]--;
+				TheSystem.grid[i][j]--;
 				
 			else if(flag[3] && !flag[0] && !flag[1] && !flag[2])
-				TheSystem.mapa[i][j]++;
+				TheSystem.grid[i][j]++;
 			
 		}
 	}
+	//trasemos o mapa normal, aí transformamos ele em um super mapa
+	TheSystem.mapa = transformIntoChunkedMap(TheSystem.grid, map__type.value);
 }
 
 let image;
@@ -215,6 +223,15 @@ const output = document.querySelector(".output");
 function openVisualizer(){
 	const divVisualizer = document.querySelector(".map-visualization");
 	divVisualizer.classList.toggle("none");
+	const sel = document.querySelector(".chunk-selector");
+	sel.addEventListener("change", (e)=> {
+		drawMap(e.target.value);
+	});
+	for(chunk in TheSystem.mapa.pieces){
+		let option = document.createElement("option");
+		option.innerHTML = chunk;
+		sel.appendChild(option);
+	}
 }
 
 let finalString;
@@ -228,6 +245,7 @@ function calculate_andSend(){
 		canvas_template.width = pallet.width;
 		canvas_template.height = pallet.height;
 		obterCorDeTemplate(pallet);
+		TheSystem.mapa.name = osInputs.nomeDoMapa.value;
 		if(map__type.value == "relevo"){
 			general(image);
 		}

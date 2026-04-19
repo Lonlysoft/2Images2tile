@@ -9,37 +9,32 @@ const furnitures = {
 		{
 			name: "sink",
 			dimen: {w: 48, h: 48, p: 48},
-			id: 1
+			id: 2
 		},
 		{
 			name: "micro pantry",
 			dimen: {w: 48, h: 48, p: 48},
-			id: 2
+			id: 4
 		},
 		{
 			name: "stove",
 			dimen: {w: 48, h: 48, p: 48},
-			id: 3
+			id: 6
 		},
 		{
 			name: "double stove",
 			dimen: {w: 96, h: 48, p: 48},
-			id: 4
+			id: 8
 		},
 		{
 			name: "chair",
 			dimen: {w: 48, h: 48, p: 48},
-			id: 6
-		},
-		{
-			name: "chair looking west",
-			dimen: {w: 48, h: 48, p: 48},
-			id: 7
+			id: 10
 		},
 		{
 			name: "table",
 			dimen: {w: 96, h: 48, p: 48},
-			id: 10
+			id: 14
 		},
 		{
 			name: "small table",
@@ -49,27 +44,27 @@ const furnitures = {
 		{
 			name: "vase 1",
 			dimen: {w: 48, h: 48, p: 48},
-			id: 13
+			id: 16
 		},
 		{
 			name: "vase 2",
 			dimen: {w: 48, h: 48, p: 48},
-			id: 14
+			id: 18
 		},
 		{
 			name: "vase 3",
 			dimen: {w: 48, h: 48, p: 48},
-			id: 15
+			id: 20
 		},
 		{
 			name: "bed",
-			dimen: {w: 96, h: 96, p: 144},
-			id: 16
+			dimen: {w: 48, h: 48, p: 96},
+			id: 22
 		},
 		{
 			name: "tree",
-			dimen: {w: 144, h: 144, p: 96},
-			id: 40
+			dimen: {w: 144, h: 48, p: 96},
+			id: 25
 		},
 	],
 	findId(wantedId){

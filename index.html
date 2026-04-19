@@ -2,9 +2,11 @@
 
 <html lang = "pt-br">
 	<head>
+		<meta name = "viewport" content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta charset="utf-8">
-		<title> Funky Pack's level automator </title>
+		<title> tileset editor </title>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<meta name = "description" content = "Funky Pack level editor, a modular semi-automatic editor for top-down games."/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital,wght@0,300..700;1,300..700&family=Kalam:wght@300;400;700&family=Play:wght@400;700&family=Poiret+One&family=Teko:wght@300..700&family=Yatra+One&display=swap" rel="stylesheet">
 		<link rel = "stylesheet" href = "reset.css"/>
@@ -20,31 +22,37 @@
 			<canvas id = "editor"></canvas>
 			<canvas id = "paleta"></canvas>
 		</div>
+		<label for = "nomeMapa"> nome do mapa </label>
+		<input class = "input__name" type = "text"/>
 		<input class = "input__image_template" type = "file" accept = "image/*"/>
 		<input class = "input__image_grid" type = "file" accept = "image/*"/>
 		<div class = flex-column>
 			<img class = "pallet_img none">
 			<img class = "main_img none">
 		</div>
-		<div class = "flex-row inclusive-sans">
+		<div class = "flex-row-responsive inclusive-sans">
 			<select class = "map__type inclusive-sans">
 				<option>relevo</option>
-				<option>gráficos</option>
+				<option>floor</option>
+				<option>objects</option>
 			</select>
 			<button class = "sendBtn inclusive-sans" onclick = "calculate_andSend()">Calcular</button>
 		</div>
 		<button class = "output inclusive-sans-bolder none" onclick="download()">baixar</button>
 		<div class = "map-visualization none">
 			<div class = "flex-column inclusive-sans">
-				<label class = "text">template de tileset para visuaizar</label>
+				<label for = "input" class = "text">template de tileset para visuaizar</label>
 				<input class = "input__tile" type = "file" accept = "image/*"/>
 				<input class = "input__tileSize" type = "number" required/>
 			</div>
-			<button class = "sendBtn inclusive-sans" onclick = "drawMap()">visualizar</button>
+			<button class = "sendBtn inclusive-sans" onclick = "drawMap('0_0')">visualizar</button>
 			<canvas id = "mapCanvas"></canvas>
+			<select class = "chunk-selector"></select>
 		</div>
 	</body>
 	
 	<script src = "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+	<script src = "chunkedMapTransformation.js"></script>
 	<script src = "Going_Edit.js"></script>
+	
 </html>

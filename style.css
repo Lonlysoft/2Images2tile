@@ -68,7 +68,7 @@ button{
 	border-radius: 0.3em;
 	transition: color 3s, background 0.1s;
 }
-.flex-row{
+.flex-row, .flex-row-responsive{
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -77,7 +77,6 @@ button{
 }
 .text{
 	padding-left: 1em;
-	
 }
 
 .bordered{
@@ -92,6 +91,38 @@ button{
 	align-items: center;
 	gap: 1em;
 }
+
+.grid{
+	display: grid;
+}
+
+.chunk-selector{
+	padding: 0.5em;
+	border: 1px solid var(--p-color);
+	width: 50vw;
+}
+
+.chunk-selector .div{
+	width: 1.5em;
+	height: 1.5em;
+}
+
+label{
+	width: 70%;
+	color: var(--button-bg);
+}
+
+.input__name{
+	background: none;
+	color: var(--button-bg);
+	border: 1px solid var(--button-bg);
+	font-size: 1.5em;
+	width: 70%;
+	padding: .5em;
+	border-radius: 100vw;
+	margin: 0;
+}
+
 .input__image_template[type="file"], .input__image_grid{
 	display: flex;
 	justify-content: center;
@@ -126,7 +157,7 @@ button{
 	content: 'paleta de cores vão aqui';
 }
 .input__image_grid::before{
-	content: 'a imagem que você quer converter vai aqui';
+	content: 'a imagem que você quer converter';
 }
 .map__type{
 	display: flex;
@@ -157,4 +188,16 @@ button{
 .switch-mode{
 	position: relative;
 	padding: .5rem
+}
+
+@media (max-width: 30em){
+	.flex-row-responsive{
+		flex-direction: column;
+	}
+	.sendBtn{
+		width: 100%;
+	}
+	select{
+		width: 100%;
+	}
 }
