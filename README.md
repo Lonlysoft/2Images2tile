@@ -58,7 +58,7 @@ após eu focar no funky pack eu tava mais vacinado contra event listeners e deci
 - essa preocupação me fez lembrar que as vezes no jogo eu utilizava numeros para tirar uma string de um array na posição do número e utilizar ela em um objeto.
 - o metodo atual se baseia em pegar duas imagens e comparar os pixels da segunda com a primeira para gerar uma matriz. É quase como se fosse uma tabela hash só que sem as operações malucas de cálculo de colisão.
 - o arquivo gerado é do tipo JSON. que acredite ou não, é util por conta do jogo ser realmente em javascript.
-- As atualizações atuais constam agora um sistema de pré-visualização que faz com que você tenha uma noção de como o map vai ser desenhado.
+- As atualizações atuais constam agora um sistema de pré-visualização que faz com que você tenha uma noção de como o map vai ser desenhado, um sistema de empilhamento e mapas agora que possuem mais de 64 colunas ou linhas são separados em chunks. o arquivo não muda porém agora todos eles são separados em um só objeto.
 
 versão 1.5
 -
@@ -67,9 +67,10 @@ versão 1.5
 - Assim eu tenho a versão 1.5. Em que eu expandi para um horizonte mais interativo. O usuario agora poderá criar os próprios mapas do zero sem precisar colocar imagens. Alêm disso, houve o desenvolvimento de um algoritmo para automatizar o calculo do tileset de sombra (porém ainda não 100% testado) ele se baseia em pegar uma grid originalmente com só zeros e quando detectada uma elevação na tile de relevo ela aumenta a layer da coluna, fazendo com que a drawing order fique automatizada.
 - as camadas são agora renderizadas em um só canvas. isso por incrível que pareça aumentou a performance e agora o usuário poderá desenhar tiles na camada selecionada sem se preocupar com a camada estar visivel em cima. coisa que os multiplos canvas não permitiam, além disso, o bug de do nada o usuário não poder usar a camada selecionada foi abolido!
 - novas layers foram emplementadas, agora possuindo possibilidade para adicionar layers de itens e objetos.
-- Em breve trabalharei na versão 1.6. Que trará a possibilidade de dar zoom e rotacionar o mapa, garantindo uma construção mais dinâmica.
+- Em breve trabalharei na versão 1.6. Que trará a possibilidade de dar zoom, rotacionar o mapa e trabalhar em chunks, igual ao sistema de imagens, garantindo uma construção mais dinâmica.
 
 Conclusão
 -
 
-É bem interessante perceber que o fato de ter só um celular e um tablet de 2016 me fez fazer um projeto que é simples e talvez até batido, mas bem útil para eu automatizar assets. Mesmo que seja feito só pra mim.
+É bem interessante perceber que o fato de ter só um celular me fez fazer um projeto que é simples e talvez até batido, mas bem útil para eu automatizar assets. Mesmo que seja feito só pra mim.
+
