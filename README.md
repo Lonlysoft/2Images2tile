@@ -57,7 +57,7 @@ após eu focar no funky pack eu tava mais vacinado contra event listeners e deci
 - por conta disso era necessário um sistema robusto que não dependesse de cores constantes, já que elas mudam de acordo com o contexto.
 - essa preocupação me fez lembrar que as vezes no jogo eu utilizava numeros para tirar uma string de um array na posição do número e utilizar ela em um objeto.
 - o metodo atual se baseia em pegar duas imagens e comparar os pixels da segunda com a primeira para gerar uma matriz. É quase como se fosse uma tabela hash só que sem as operações malucas de cálculo de colisão.
-- o arquivo gerado é do tipo JSON. que acredite ou não, é util por conta do jogo ser realmente em javascript.
+- o arquivo gerado é um zip que ao ser extraído apresenta um JSON. que acredite ou não, é util por conta do jogo ser realmente em javascript.
 - As atualizações atuais constam agora um sistema de pré-visualização que faz com que você tenha uma noção de como o map vai ser desenhado, um sistema de empilhamento e mapas agora que possuem mais de 64 colunas ou linhas são separados em chunks. o arquivo não muda porém agora todos eles são separados em um só objeto.
 
 versão 1.5
