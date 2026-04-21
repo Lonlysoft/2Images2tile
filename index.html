@@ -36,9 +36,9 @@
 				<option>floor</option>
 				<option>objects</option>
 			</select>
-			<button class = "sendBtn inclusive-sans" onclick = "calculate_andSend()">Calcular</button>
+			<button class = "sendBtn inclusive-sans" onclick = "calculate()">Calcular</button>
+			<button class = "output inclusive-sans-bolder none" onclick="download()">baixar</button>
 		</div>
-		<button class = "output inclusive-sans-bolder none" onclick="download()">baixar</button>
 		<div class = "map-visualization none">
 			<div class = "flex-column inclusive-sans">
 				<label for = "input" class = "text">template de tileset para visuaizar</label>
@@ -50,7 +50,7 @@
 			<select class = "chunk-selector"></select>
 		</div>
 	</body>
-	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src = "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
 	<script src = "chunkedMapTransformation.js"></script>
 	<script src = "Going_Edit.js"></script>

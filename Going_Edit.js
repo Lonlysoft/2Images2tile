@@ -2,7 +2,8 @@ const canvas = document.getElementById("editor");
 const ctx = canvas.getContext("2d");
 const canvas_template = document.getElementById("paleta");
 const ctx_template = canvas_template.getContext("2d");
-
+const body = document.querySelector("body");
+const sendBtn = document.querySelector(".sendBtn");
 let coresTemplate = [];
 const TheSystem = {name: "mapa", grid: [], mapa: {}};
 
@@ -234,8 +235,8 @@ function openVisualizer(){
 	}
 }
 
-let finalString;
-function calculate_andSend(){
+let finalBlob;
+function calculate(){
 	let send = document.querySelector(".sendBtn");
 	send.style.background = "var(--p-color)";
 	send.innerHTML = "processando...";
@@ -257,8 +258,20 @@ function calculate_andSend(){
 	}, 1000);
 }
 
+async function download(){
+	const blobs = [];
+	const zip = new JSZip();
+	for(const chunk in TheSystem.mapa.pieces){
+		zip.file(chunk+".json", new Blob([JSON.stringify(TheSystem.mapa.pieces[chunk], null, 2)], {type: "application/JSON"}));
+	}
+	const zipBlob = await zip.generateAsync({
+		type: 'blob',
+		compression: 'DEFLATE',
+		compressionOptions: {
+			level: 9
+		}
+	});
+	const blob = zipBlob;
+	saveAs(blob, "mapa.zip")
 
-function download(){
-	const blob = new Blob([JSON.stringify(TheSystem.mapa, null, 2)], {type: "application/JSON"})
-	saveAs(blob, ""+map__type.value+".json")
 }
