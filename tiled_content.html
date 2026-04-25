@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang = "pt-br">
 <head>
-	<meta name = "viewport" content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	<meta charset = "utf-8">
 	<link rel = "stylesheet" href = "tiled_style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-	<h1>Editor de Niveis Funky Pack - GUI alt</h1>
+	<h1>Editor de TileSet</h1>
 	<div class = "flex-row">
 		<a href = "index.html" class = "switch-mode">2Image2Tile</a>
 		<a href = "" class = "switch-mode selected">Editor de Tileset</a>
@@ -24,14 +23,14 @@
 				<input type = "number" class = "input__mapSize" placeholder= "altura"/>
 			</label>
 		</section>
-		<section class = "flex-row-responsive">
+		<section class = "flex-row">
 			<section class = "flex-column-left std-gap right-division">
 				<h3>Adereços extras</h3>
 				<label class = "flex-row water_check">
-					<div class = "toggler flex-row-left input__isChunkedWorld">
+					<div class = "toggler flex-row-left input__hasWater">
 						<div class = "ball-indicator"></div>
 					</div>
-					<p class = "slider">divisao em chunks</p>
+					<p class = "slider">água?</p>
 				</label>
 				<label class = "flex-row water_check">
 					<div class = "toggler flex-row-left input__hasEnemy">
@@ -51,25 +50,16 @@
 					</div>
 					<p class = "slider">colocar npcs?</p>
 				</label>
-				<label class = "flex-row water_check">
-					<div class = "toggler flex-row-left input__placeableFurniture">
-						<div class = "ball-indicator"></div>
-					</div>
-					<p class = "slider">colocar moveis?</p>
-				</label>
 			</section>
-			<div class = "flex-column imagery-inputs">
+			<div class = "flex-row imagery-inputs">
 				<input type = "file" class = "input__image_tilemap"/>
-				<input type = "file" class = "hidden input__image_npcs"/>
-				<div class = "flex-row hidden structure-pre-menu">
-					<input type = "file" class = "input__image_furniture"/>
-					<button class = "btns launch-img"><i class = "fa-solid fa-plus"></i></button>
-				</div>
+				<input type = "file" class = "hidden input__image_items"/>
+				<input type = "file" class = "hidden input__image_furniture"/>
 			</div>
 		</section>
 		<button class = "btns full-btn" id = "btn-aplicar">criar</button>
 	</div>
-	<!--para acelerar o desenvolvimento eu vou fazer diferente-->
+	
 	<main class = "hidden">
 		<div class = "flex-row-left tool-bar">
 			<button class = "relative old-btns">
@@ -97,11 +87,11 @@
 			<button class = "old-btns" id = "btn-informacoes">
 				<i class = "fa-solid fa-info"></i>
 			</button>
-			<button class = "old-btns" id = "btn-items">
-				<i class = "fa-solid fa-cube"></i>
+			<button class = "old-btns" id = "btn-undo">
+				<i class = "fa-solid fa-undo"></i>
 			</button>
-			<button class = "old-btns " id = "btn-furniture">
-				<i class = "fa-solid fa-tree"></i>
+			<button class = "old-btns" id = "btn-redo">
+				<i class = "fa-solid fa-redo"></i>
 			</button>
 		</div>
 		<div class = "hidden flex-row relevoMode">
@@ -112,15 +102,12 @@
 		<div class = "flex-row">
 			<div class = "multi-canvas"></div>
 		</div>
-		<section class = "item-list absolute hidden"></section>
 	</main>
 	<footer class = "fixed bottom">
 		<h4>&copy Lonlysoft Solutions 2025</h4>
-		
 	</footer>
 </body>
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
 <script src = "canvas.js"></script>
-<script src = "furniturePositioning.js"></script>
 <script src = "tiledScript.js"></script>
 </html>

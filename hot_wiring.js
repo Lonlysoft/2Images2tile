@@ -25,6 +25,4 @@ eu pensei em botar um sistema de cores mas deu errado, estou pensando em fazer a
 EDIT 2025: O sistema de cores era uma outra coisa bastante diferente do que é hoje, n se engane. Eu pensava em fazer tudo ser uma matriz de strings que guardaria tanto colisões, multiplos graficos, posições de NPCs, objetos e ítens. O que é quase impensável hoje em dia. demoraria mais tempo pra programar o leitor desse tipo de string absurda e seria bem limitado.
 */
 
-/*
-EDIT 2026: Isso daqui a pouco tá virando um aplicativo de editor de níveis pq tá muito específico
-*/
+

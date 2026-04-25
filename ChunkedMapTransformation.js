@@ -33,7 +33,7 @@ function transformIntoChunkedMap(grid, type){
 					grids: {
 						floor: [],
 						ground: [],
-						objects: [[]]
+						objects: []
 					}
 				}
 			} else {

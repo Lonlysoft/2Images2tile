@@ -81,6 +81,8 @@ function general(imagemSdw){
 		}
 	}
 	TheSystem.mapa = transformIntoChunkedMap(TheSystem.grid, "ground");
+	TheSystem.shadowGrid = calculateRelevo(TheSystem.grid);
+	TheSystem.mapa = transformIntoChunkedMap(TheSystem.shadowGrid, "shadow");
 }
 
 const TileSize = 48;
@@ -233,6 +235,27 @@ function openVisualizer(){
 		option.innerHTML = chunk;
 		sel.appendChild(option);
 	}
+}
+
+function calculateRelevo(map){
+	let layerIndex = 0
+	const shadows = [];
+	for(let i = 0; i < map.length; i++){
+		shadows.push(new Array());
+		for(let j = 0; j < map[i].length; j++){
+			shadows[i].push(0);
+		}
+	}
+	for(let i = 1; i < map.length; i++){
+		for(let j = 0; j < map[i].length; j++){
+			if(map[i][j] > map[i-1][j]){
+				for(let k = i; k < map.length; k++){
+					shadows[k][j]++;
+				}
+			}
+		}
+	}
+	return shadows;
 }
 
 let finalBlob;
