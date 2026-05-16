@@ -1,4 +1,4 @@
-const CHUNK_MAX_SIZE = 32;
+const CHUNK_MAX_SIZE = 16;
 
 function transformIntoChunkedMap(grid, type){
 	const mapaTransformado = {
